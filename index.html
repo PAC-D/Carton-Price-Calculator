@@ -111,33 +111,43 @@
           <div id="calc-instruction" class="calc-instruction">Select a supplier and factory, then enter dimensions and quantity to see the calculation.</div>
 
           <div id="calc-results" class="results" style="display: none;">
-            <div class="result-item">
-              <span class="result-label">Supplier SQM / Carton</span>
-              <span class="result-value" id="res-supp-sqm"></span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; grid-column: span 2;">
+              <div class="result-item" style="background: #f8fafc; border-color: #e2e8f0; display: block; border: 1px solid #e2e8f0;">
+                <h4 style="margin-bottom: 12px; color: #1e293b; font-size: 16px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;">Supplier Cost</h4>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
+                  <span class="result-label">SQM / Carton</span>
+                  <strong class="result-value" id="res-supp-sqm" style="font-size: 14px;"></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
+                  <span class="result-label">Price / Carton</span>
+                  <strong class="result-value" id="res-supp-cost" style="font-size: 14px;"></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; font-weight: 700;">
+                  <span class="result-label">Total</span>
+                  <strong class="result-value" id="res-supp-total" style="font-size: 16px;"></strong>
+                </div>
+              </div>
+
+              <div class="result-item" style="background: #f0fdf4; border-color: #bbf7d0; display: block; border: 1px solid #bbf7d0;">
+                <h4 style="margin-bottom: 12px; color: #1e293b; font-size: 16px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;">Primark Price</h4>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
+                  <span class="result-label">SQM / Carton</span>
+                  <strong class="result-value" id="res-prim-sqm" style="font-size: 14px;"></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
+                  <span class="result-label">Price / Carton</span>
+                  <strong class="result-value" id="res-prim-cost" style="font-size: 14px;"></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; font-weight: 700;">
+                  <span class="result-label">Total</span>
+                  <strong class="result-value" id="res-prim-total" style="font-size: 16px;"></strong>
+                </div>
+              </div>
             </div>
-            <div class="result-item">
-              <span class="result-label">Primark SQM / Carton</span>
-              <span class="result-value" id="res-prim-sqm"></span>
-            </div>
-            <div class="result-item">
-              <span class="result-label">Supplier Cost / Carton</span>
-              <span class="result-value" id="res-supp-cost"></span>
-            </div>
-            <div class="result-item">
-              <span class="result-label">Primark Price / Carton</span>
-              <span class="result-value" id="res-prim-cost"></span>
-            </div>
-            <div class="result-item">
-              <span class="result-label">Supplier Total</span>
-              <span class="result-value" id="res-supp-total"></span>
-            </div>
-            <div class="result-item">
-              <span class="result-label">Primark Total</span>
-              <span class="result-value" id="res-prim-total"></span>
-            </div>
+            
             <div class="result-item highlight-result full-width">
               <span class="result-label">Margin (Primark - Supplier)</span>
-              <span class="result-value" id="res-margin"></span>
+              <strong class="result-value" id="res-margin"></strong>
             </div>
           </div>
         </div>
@@ -163,7 +173,7 @@
           </div>
         </section>
 
-        <button id="export-pdf-btn" class="primary-btn" disabled>
+        <button id="export-pdf-btn" class="primary-btn" disabled style="display: none;">
           <i data-lucide="download"></i> Export PDF
         </button>
       </div>
