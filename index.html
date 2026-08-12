@@ -118,6 +118,25 @@
             </div>
           </div>
         </div>
+        <section id="paper-consumption-card" class="paper-consumption-card" style="display: none;">
+          <h3>Paper Consumption</h3>
+          <p class="paper-subtitle">Per carton</p>
+          <div class="paper-details-grid">
+            <div class="paper-detail"><span>Board Length</span><strong id="paper-board-length"></strong></div>
+            <div class="paper-detail"><span>Stitching</span><strong id="paper-stitching"></strong></div>
+            <div class="paper-detail"><span>Actual Length</span><strong id="paper-actual-length"></strong></div>
+            <div class="paper-detail"><span>Fluting Space</span><strong id="paper-fluting-space"></strong></div>
+            <div class="paper-detail"><span>Width</span><strong id="paper-width"></strong></div>
+            <div class="paper-detail"><span>Divide</span><strong id="paper-divide"></strong></div>
+            <div class="paper-detail"><span>Cutting Space</span><strong id="paper-cutting-space"></strong></div>
+            <div class="paper-detail"><span>Board Width</span><strong id="paper-board-width"></strong></div>
+            <div class="paper-detail"><span>Paper Roll Width</span><strong id="paper-roll-width"></strong></div>
+          </div>
+          <div class="paper-consumption-total">
+            <span>Paper Consumption</span>
+            <strong id="paper-consumption-sqm"></strong>
+          </div>
+        </section>
         <button id="generate-quote-btn" class="btn btn-primary" disabled>Generate Quotation</button>
       </section>
 
@@ -187,6 +206,24 @@
               <td id="pdf-prim-cost"></td>
               <td id="pdf-prim-tot"></td>
             </tr>
+          </tbody>
+        </table>
+
+        <table id="pdf-paper-consumption" class="pdf-table paper-pdf-table" style="display: none;">
+          <thead>
+            <tr><th colspan="2">Paper Consumption (Per Carton)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Board Length</td><td id="pdf-paper-board-length"></td></tr>
+            <tr><td>Stitching</td><td id="pdf-paper-stitching"></td></tr>
+            <tr><td>Actual Length</td><td id="pdf-paper-actual-length"></td></tr>
+            <tr><td>Fluting Space</td><td id="pdf-paper-fluting-space"></td></tr>
+            <tr><td>Width</td><td id="pdf-paper-width"></td></tr>
+            <tr><td>Divide</td><td id="pdf-paper-divide"></td></tr>
+            <tr><td>Cutting Space</td><td id="pdf-paper-cutting-space"></td></tr>
+            <tr><td>Board Width</td><td id="pdf-paper-board-width"></td></tr>
+            <tr><td>Paper Roll Width</td><td id="pdf-paper-roll-width"></td></tr>
+            <tr><td><strong>Paper Consumption</strong></td><td id="pdf-paper-consumption-sqm"></td></tr>
           </tbody>
         </table>
 

@@ -387,3 +387,85 @@ body {
 @media (max-width: 640px) {
   .results-grid { flex-direction: column; }
 }
+
+/* Paper consumption */
+.paper-consumption-card {
+  margin: 20px 0 24px;
+  padding: 20px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+}
+
+.paper-consumption-card h3 {
+  color: #1e3a5f;
+  font-size: 18px;
+}
+
+.paper-subtitle {
+  margin-bottom: 14px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.paper-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.paper-detail {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 6px;
+  background: #ffffff;
+  font-size: 13px;
+}
+
+.paper-detail span {
+  color: #475569;
+}
+
+.paper-detail strong {
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.paper-consumption-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 6px;
+  background: #dbeafe;
+  color: #1e3a5f;
+  font-size: 16px;
+}
+
+.paper-consumption-total strong {
+  font-size: 20px;
+}
+
+.paper-pdf-table {
+  margin-bottom: 24px;
+}
+
+.paper-pdf-table th {
+  padding: 10px;
+  background: #eff6ff;
+  color: #1e3a5f;
+  text-align: left;
+}
+
+.paper-pdf-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+@media (max-width: 640px) {
+  .paper-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
