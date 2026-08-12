@@ -1,6 +1,7 @@
 const SUPPLIERS = {
   epyllion: {
     name: "Epyllion",
+    formulaId: "epyllion",
     factories: [
       { name: "Fakir Knitwears Ltd.", rate: 0.70 },
       { name: "Well Lord Knitwear Limited", rate: 0.78 },
@@ -36,6 +37,7 @@ const SUPPLIERS = {
   },
   mu: {
     name: "M&U",
+    formulaId: "mu",
     factories: [
       { name: "Akh Eco Apparels Ltd", rate: 0.96 },
       { name: "Ananta Casual Wear Ltd", rate: 0.85 },
@@ -84,6 +86,7 @@ const SUPPLIERS = {
   },
   uniglory: {
     name: "Uniglory",
+    formulaId: "uniglory",
     factories: [
       { name: "AB APPARELS LTD", rate: 0.78 },
       { name: "Crown Exclusive Wears", rate: 0.72 },
@@ -143,3 +146,17 @@ const SUPPLIERS = {
     ]
   }
 };
+
+const CARTON_PRESETS = [
+  { id: "495x285x375", label: "495 x 285 x 375", l: 495, w: 285, h: 375 },
+  { id: "480x360x150", label: "480 x 360 x 150", l: 480, w: 360, h: 150 },
+  { id: "380x340x150", label: "380 x 340 x 150", l: 380, w: 340, h: 150 },
+  { id: "480x320x280", label: "480 x 320 x 280", l: 480, w: 320, h: 280 },
+  { id: "550x340x260", label: "550 x 340 x 260", l: 550, w: 340, h: 260 },
+  { id: "600x400x150", label: "600 x 400 x 150", l: 600, w: 400, h: 150 },
+  { id: "770x430x240", label: "770 x 430 x 240", l: 770, w: 430, h: 240 },
+  { id: "630x320x350", label: "630 x 320 x 350", l: 630, w: 320, h: 350 },
+  { id: "540x300x260", label: "540 x 300 x 260", l: 540, w: 300, h: 260 },
+  { id: "500x380x290", label: "500 x 380 x 290", l: 500, w: 380, h: 290 },
+  { id: "800x600x500", label: "800 x 600 x 500", l: 800, w: 600, h: 500 }
+];
