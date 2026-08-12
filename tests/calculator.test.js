@@ -22,3 +22,47 @@ QUnit.test('calculatePrice full payload', function(assert) {
   assert.ok(res.supplierSqm);
   assert.ok(res.margin);
 });
+
+QUnit.module('Paper Consumption');
+
+QUnit.test('Epyllion calculates board values and rounds roll width to 50 mm', function(assert) {
+  const result = calculatePaperConsumption('epyllion', 100, 100, 100);
+
+  assert.deepEqual(result, {
+    boardLength: 400,
+    stitching: 100,
+    actualLength: 500,
+    flutingSpace: 10,
+    width: 210,
+    divide: 1,
+    cuttingSpace: 40,
+    boardWidth: 250,
+    rollIncrement: 50,
+    paperRollWidth: 250,
+    paperConsumptionSqm: 0.125
+  });
+});
+
+QUnit.test('M&U uses divide 2 and rounds roll width to 100 mm', function(assert) {
+  const result = calculatePaperConsumption('mu', 500, 600, 500);
+
+  assert.equal(result.divide, 2);
+  assert.equal(result.boardWidth, 2260);
+  assert.equal(result.rollIncrement, 100);
+  assert.equal(result.paperRollWidth, 2300);
+  assert.equal(result.paperConsumptionSqm, 2.645);
+});
+
+QUnit.test('Uniglory keeps exact 50 mm roll width multiple', function(assert) {
+  const result = calculatePaperConsumption('uniglory', 100, 200, 250);
+
+  assert.equal(result.boardWidth, 500);
+  assert.equal(result.paperRollWidth, 500);
+});
+
+QUnit.test('invalid paper-consumption input returns null', function(assert) {
+  assert.strictEqual(calculatePaperConsumption('unknown', 100, 100, 100), null);
+  assert.strictEqual(calculatePaperConsumption('epyllion', 0, 100, 100), null);
+  assert.strictEqual(calculatePaperConsumption('mu', 100, -1, 100), null);
+  assert.strictEqual(calculatePaperConsumption('uniglory', 100, 100, Number.NaN), null);
+});
