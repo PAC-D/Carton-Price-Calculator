@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200">
+  <title>PDF Export - Carton Price Calculator</title>
+  <script src="lib/html2pdf.bundle.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #525659;
+      display: flex;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    #page {
+      width: 210mm;
+      min-height: 297mm;
+      background: white;
+      padding: 15mm;
+      box-sizing: border-box;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      margin: 20px;
+      position: relative;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #00205b;
+      padding-bottom: 0.75rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .logo {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .content {
+      margin-top: 1rem;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      color: #e31837;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .grid-row {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .grid-item {
+      flex: 1;
+    }
+
+    .dims-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      background: #f8fafc;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .dim-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .label {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .value {
+      font-size: 1rem;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .cost-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .cost-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem;
+      border-bottom: 1px dotted #ccc;
+    }
+
+    .cost-row.highlight {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #00205b;
+    }
+
+    .paper-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .paper-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.9rem;
+    }
+
+    .paper-table td:first-child {
+      color: #64748b;
+      width: 55%;
+    }
+
+    .paper-table td:last-child {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .paper-table tr.paper-total td {
+      background: #eff6ff;
+      color: #00205b;
+      font-weight: 700;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20mm;
+      left: 20mm;
+      right: 20mm;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      border-top: 1px solid #eee;
+      padding-top: 1rem;
+    }
+
+    @media print {
+      #status-bar,
+      #download-btn {
+        display: none !important;
+      }
+
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+
+      body {
+        background: white;
+        margin: 0;
+        padding: 0;
+        display: block;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      #page {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 15mm;
+        box-shadow: none;
+        border: none;
+      }
+
+      .footer {
+        position: fixed;
+        bottom: 10mm;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="status-bar" style="position: fixed; top: 0; left: 0; width: 100%; background: #00205b; color: white; padding: 10px; text-align: center; font-size: 14px; z-index: 1000;">
+    Generating PDF... Please wait.
+  </div>
+
+  <div id="page">
+    <div class="header">
+      <img src="pacd.png" alt="PACD" class="logo">
+    </div>
+
+    <h1 style="text-align: center; color: #00205b; font-size: 1.5rem; margin-top: -10px; margin-bottom: 5px;">Carton Price Calculator &mdash; Quotation</h1>
+    <div style="text-align: right; margin-bottom: 20px; font-size: 0.85rem; color: #64748b;">
+      Date: <span id="date-header"></span>
+    </div>
+
+    <div class="content">
+      <h2>Supplier &amp; Factory Information</h2>
+      <div id="supplier-container"></div>
+
+      <h2>Specifications</h2>
+      <div class="grid-row">
+        <div class="grid-item">
+          <div class="label">Carton Size</div>
+          <div class="value" id="spec-carton"></div>
+        </div>
+        <div class="grid-item">
+          <div class="label">Quantity</div>
+          <div class="value" id="spec-qty"></div>
+        </div>
+      </div>
+
+      <h2>Outside Dimension (mm) - FEFCO 0201</h2>
+      <div class="dims-row" id="dims-container"></div>
+
+      <h2>Cost Breakdown</h2>
+      <div class="cost-list" id="costs-container"></div>
+
+      <div id="paper-section" style="display: none;">
+        <h2>Paper Consumption (Per Carton)</h2>
+        <table class="paper-table" id="paper-table">
+          <tbody id="paper-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">Generated by Carton Price Calculator &mdash; PACD &copy; 2026</div>
+  </div>
+
+  <!-- Manual Download Button (Hidden initially) -->
+  <button id="download-btn" onclick="generatePDF()"
+    style="display: none; position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; background: #e31837; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+    Download PDF Again
+  </button>
+
+  <script>
+    // Helper to retrieve data from URL param or LocalStorage
+    function getExportData() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const encodedData = urlParams.get('data');
+        if (encodedData) {
+          const jsonString = decodeURIComponent(atob(encodedData));
+          return JSON.parse(jsonString);
+        }
+        return JSON.parse(window.localStorage.getItem('cartonPrintData'));
+      } catch (e) {
+        console.error('Error retrieving data:', e);
+        return null;
+      }
+    }
+
+    function generatePDF() {
+      const element = document.getElementById('page');
+      const status = document.getElementById('status-bar');
+      status.textContent = 'Generating PDF...';
+
+      // Determine Filename
+      let filename = 'Carton-Price-Quotation.pdf';
+      try {
+        const data = getExportData();
+        if (data && data.calc) {
+          const L = String(data.calc.l || '').replace(/[^0-9]/g, '');
+          const W = String(data.calc.w || '').replace(/[^0-9]/g, '');
+          const H = String(data.calc.h || '').replace(/[^0-9]/g, '');
+          const Q = String(data.calc.qty || '').replace(/[^0-9]/g, '');
+          filename = 'Quotation-' + L + 'x' + W + 'x' + H + '-' + Q + '.pdf';
+        }
+      } catch (e) {
+        console.error('Error generating filename', e);
+      }
+
+      // CLONE STRATEGY + FORCE EXACT DIMENSIONS
+      const A4_WIDTH_PX = 794;
+      const A4_HEIGHT_PX = 1123;
+
+      const clone = element.cloneNode(true);
+      clone.style.transform = 'none';
+      clone.style.margin = '0';
+      clone.style.padding = '56px';
+      clone.style.boxShadow = 'none';
+      clone.style.border = 'none';
+      clone.style.width = A4_WIDTH_PX + 'px';
+      clone.style.minHeight = A4_HEIGHT_PX + 'px';
+      clone.style.maxHeight = A4_HEIGHT_PX + 'px';
+      clone.style.height = 'auto';
+      clone.style.overflow = 'hidden';
+      clone.style.position = 'absolute';
+      clone.style.top = '0';
+      clone.style.left = '0';
+      clone.style.background = '#ffffff';
+      clone.style.boxSizing = 'border-box';
+      clone.style.fontSize = '16px';
+
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.top = '-9999px';
+      container.style.left = '-9999px';
+      container.style.width = A4_WIDTH_PX + 'px';
+      container.style.height = A4_HEIGHT_PX + 'px';
+      container.style.overflow = 'hidden';
+      container.style.background = '#ffffff';
+      container.style.zIndex = '9999';
+      container.style.margin = '0';
+      container.style.padding = '0';
+      container.style.visibility = 'hidden';
+
+      container.appendChild(clone);
+      document.body.appendChild(container);
+      clone.offsetHeight;
+
+      const opt = {
+        margin: 0,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        enableLinks: true,
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          scrollY: 0,
+          scrollX: 0,
+          x: 0,
+          y: 0,
+          width: A4_WIDTH_PX,
+          height: A4_HEIGHT_PX,
+          windowWidth: A4_WIDTH_PX,
+          windowHeight: A4_HEIGHT_PX,
+          deviceScaleFactor: 1,
+          letterRendering: 1,
+          allowTaint: true,
+          logging: false
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(clone).toPdf().get('pdf').then(function (pdf) {
+        const totalPages = pdf.internal.getNumberOfPages();
+        if (totalPages > 1) {
+          for (let i = totalPages; i > 1; i--) {
+            pdf.deletePage(i);
+          }
+        }
+      }).save().then(() => {
+        if (document.body.contains(container)) {
+          document.body.removeChild(container);
+        }
+        status.textContent = 'PDF Downloaded! You can now close this tab.';
+        status.style.background = '#10b981';
+        document.getElementById('download-btn').style.display = 'block';
+      }).catch(err => {
+        console.error('PDF Generation Error:', err);
+        if (document.body.contains(container)) {
+          document.body.removeChild(container);
+        }
+        status.textContent = 'Error generating PDF. Please try manual download.';
+        status.style.background = '#e31837';
+        document.getElementById('download-btn').style.display = 'block';
+      });
+    }
+
+    window.onload = function () {
+      const data = getExportData();
+
+      if (!data) {
+        document.body.innerHTML = '<h1 style="color: white; margin-top: 50px; text-align: center;">No data found. Please calculate price first.</h1>';
+        return;
+      }
+
+      document.getElementById('date-header').textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '-');
+
+      // Supplier & Factory Information
+      const supplierDiv = document.getElementById('supplier-container');
+      let supplierHtml = '';
+      supplierHtml += `
+        <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+          <div style="flex: 1;">
+            <div class="label">Supplier Name</div>
+            <div class="value" style="white-space: normal; word-wrap: break-word;">${data.supplier.supplierName || '-'}</div>
+          </div>
+        </div>
+      `;
+      supplierHtml += `
+        <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+          <div style="flex: 1;">
+            <div class="label">Factory Name</div>
+            <div class="value" style="white-space: normal; word-wrap: break-word;">${data.supplier.factoryName || '-'}</div>
+          </div>
+        </div>
+      `;
+      supplierHtml += `
+        <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+          <div style="flex: 1;">
+            <div class="label">Rate per SQM</div>
+            <div class="value">${data.supplier.ratePerSqm || '-'}</div>
+          </div>
+        </div>
+      `;
+      supplierDiv.innerHTML = supplierHtml;
+
+      // Specifications
+      document.getElementById('spec-carton').textContent = data.calc.presetLabel || '-';
+      document.getElementById('spec-qty').textContent = data.calc.qty || '-';
+
+      // Dimensions
+      document.getElementById('dims-container').innerHTML = `
+        <div class="dim-box"><div class="label">Length</div><div class="value">${data.calc.l || '-'} mm</div></div>
+        <div class="dim-box"><div class="label">Width</div><div class="value">${data.calc.w || '-'} mm</div></div>
+        <div class="dim-box"><div class="label">Height</div><div class="value">${data.calc.h || '-'} mm</div></div>
+      `;
+
+      // Cost Breakdown
+      const costs = [];
+      costs.push({ label: 'Supplier SQM / Carton', value: data.results.supplierSqm });
+      costs.push({ label: 'Supplier Cost / Carton', value: data.results.supplierCostPerCarton });
+      costs.push({ label: 'Supplier Total', value: data.results.supplierTotalCost });
+      costs.push({ label: 'Primark SQM / Carton', value: data.results.primarkSqm });
+      costs.push({ label: 'Primark Cost / Carton', value: data.results.primarkCostPerCarton });
+      costs.push({ label: 'Primark Total', value: data.results.primarkTotalPrice });
+      costs.push({ label: 'Margin (Primark - Supplier)', value: data.results.margin, highlight: true });
+
+      let costsHtml = '';
+      costs.forEach(item => {
+        const cls = item.highlight ? 'cost-row highlight' : 'cost-row';
+        costsHtml += `<div class="${cls}"><span>${item.label}</span><span>${item.value}</span></div>`;
+      });
+      document.getElementById('costs-container').innerHTML = costsHtml;
+
+      // Paper Consumption (optional)
+      if (data.paper) {
+        const rows = [
+          ['Board Length', data.paper.boardLength],
+          ['Stitching', data.paper.stitching],
+          ['Actual Length', data.paper.actualLength],
+          ['Fluting Space', data.paper.flutingSpace],
+          ['Width', data.paper.width],
+          ['Divide', data.paper.divide],
+          ['Cutting Space', data.paper.cuttingSpace],
+          ['Board Width', data.paper.boardWidth],
+          ['Paper Roll Width', data.paper.paperRollWidth],
+          ['Paper Consumption', data.paper.paperConsumptionSqm]
+        ];
+        let paperHtml = rows.map((r, i) =>
+          `<tr${i === rows.length - 1 ? ' class="paper-total"' : ''}><td>${r[0]}</td><td>${r[1]}</td></tr>`
+        ).join('');
+        document.getElementById('paper-tbody').innerHTML = paperHtml;
+        document.getElementById('paper-section').style.display = 'block';
+      }
+
+      // Trigger generation with a slight delay
+      setTimeout(generatePDF, 800);
+    };
+  </script>
+</body>
+</html>
