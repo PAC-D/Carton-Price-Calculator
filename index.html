@@ -8,8 +8,100 @@
 </head>
 <body>
   <div id="app">
-    <h1>Carton Price Calculator</h1>
-    <p>Loading...</p>
+    <!-- Header -->
+    <header class="header">
+      <h1>Carton Price Calculator</h1>
+      <p class="subtitle">Packaging Rate Lookup &amp; Quotation Generator</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Step 1: Supplier Selection -->
+      <section class="card">
+        <h2 class="section-title">1. Select Packaging Supplier</h2>
+        <div id="supplier-tabs" class="supplier-tabs">
+          <button class="tab-btn" data-supplier="epyllion">Epyllion</button>
+          <button class="tab-btn" data-supplier="mu">M&amp;U</button>
+          <button class="tab-btn" data-supplier="uniglory">Uniglory</button>
+        </div>
+      </section>
+
+      <!-- Step 2: Factory Selection -->
+      <section class="card" id="factory-section" style="display: none;">
+        <h2 class="section-title">2. Select Factory</h2>
+        <input type="text" id="factory-search" class="search-input" placeholder="Search factories...">
+        <div class="table-container">
+          <table id="factory-table" class="factory-table">
+            <thead>
+              <tr>
+                <th>Factory Name</th>
+                <th>Rate/SQM (USD)</th>
+              </tr>
+            </thead>
+            <tbody id="factory-tbody">
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Step 3: Rate Display -->
+      <section class="card" id="rate-section" style="display: none;">
+        <h2 class="section-title">3. Rate Details</h2>
+        <div id="rate-display" class="rate-display">
+          <div class="rate-row">
+            <span class="rate-label">Supplier:</span>
+            <span id="selected-supplier" class="rate-value"></span>
+          </div>
+          <div class="rate-row">
+            <span class="rate-label">Factory:</span>
+            <span id="selected-factory" class="rate-value"></span>
+          </div>
+          <div class="rate-row rate-highlight">
+            <span class="rate-label">Rate per SQM:</span>
+            <span id="selected-rate" class="rate-value rate-amount"></span>
+          </div>
+        </div>
+        <div class="calculator-placeholder">
+          <p>Calculation section coming soon — custom formulas per supplier will be added here.</p>
+        </div>
+        <button id="generate-quote-btn" class="btn btn-primary" disabled>Generate Quotation</button>
+      </section>
+
+      <!-- Step 4: Quotation Preview -->
+      <section class="card" id="quotation-section" style="display: none;">
+        <h2 class="section-title">4. Quotation Preview</h2>
+        <div id="quotation-preview" class="quotation-preview">
+        </div>
+        <button id="download-pdf-btn" class="btn btn-success">Download PDF</button>
+      </section>
+    </main>
+
+    <!-- Hidden PDF template -->
+    <div id="pdf-content" class="pdf-content" style="display: none;">
+      <div class="pdf-header">
+        <h1>Packaging Price Quotation</h1>
+        <p class="pdf-date" id="pdf-date"></p>
+      </div>
+      <table class="pdf-table">
+        <tr>
+          <td class="pdf-label">Packaging Supplier:</td>
+          <td class="pdf-value" id="pdf-supplier"></td>
+        </tr>
+        <tr>
+          <td class="pdf-label">Factory:</td>
+          <td class="pdf-value" id="pdf-factory"></td>
+        </tr>
+        <tr>
+          <td class="pdf-label">Rate per SQM:</td>
+          <td class="pdf-value" id="pdf-rate"></td>
+        </tr>
+      </table>
+      <div class="pdf-placeholder">
+        <p>Detailed cost breakdown will be available in a future update.</p>
+      </div>
+      <div class="pdf-footer">
+        <p>Generated: <span id="pdf-timestamp"></span></p>
+      </div>
+    </div>
   </div>
 
   <script src="js/data.js"></script>
