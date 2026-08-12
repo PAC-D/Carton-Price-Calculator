@@ -4,30 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carton Price Calculator</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div id="app">
-    <!-- Header -->
-    <header class="header">
-      <h1>Carton Price Calculator</h1>
-      <p class="subtitle">Packaging Rate Lookup &amp; Quotation Generator</p>
-    </header>
+  <div class="bg-decoration"></div>
 
-    <main class="main-content">
+  <nav class="navbar">
+    <div class="logo-section">
+      <img src="pacd.png" alt="PACD Logo" class="logo-img">
+    </div>
+    <h1>Carton Price Calculator</h1>
+  </nav>
+
+  <div class="main-container">
+    <div class="calculator-card">
+
       <!-- Step 1: Supplier Selection -->
-      <section class="card">
-        <h2 class="section-title">1. Select Packaging Supplier</h2>
+      <div class="card-section">
+        <label class="section-label">1. Select Packaging Supplier</label>
         <div id="supplier-tabs" class="supplier-tabs">
           <button class="tab-btn" data-supplier="epyllion">Epyllion</button>
           <button class="tab-btn" data-supplier="mu">M&amp;U</button>
           <button class="tab-btn" data-supplier="uniglory">Uniglory</button>
         </div>
-      </section>
+      </div>
 
       <!-- Step 2: Factory Selection -->
-      <section class="card" id="factory-section" style="display: none;">
-        <h2 class="section-title">2. Select Factory</h2>
+      <div class="card-section" id="factory-section" style="display: none;">
+        <label class="section-label">2. Select Factory</label>
         <input type="text" id="factory-search" class="search-input" placeholder="Search factories...">
         <div class="table-container">
           <table id="factory-table" class="factory-table">
@@ -37,87 +46,99 @@
                 <th>Rate/SQM (USD)</th>
               </tr>
             </thead>
-            <tbody id="factory-tbody">
-            </tbody>
+            <tbody id="factory-tbody"></tbody>
           </table>
         </div>
-      </section>
+      </div>
 
-      <!-- Step 3: Rate Display -->
-      <section class="card" id="rate-section" style="display: none;">
-        <h2 class="section-title">3. Rate Details</h2>
-        <div id="rate-display" class="rate-display">
-          <div class="rate-row">
-            <span class="rate-label">Supplier:</span>
-            <span id="selected-supplier" class="rate-value"></span>
-          </div>
-          <div class="rate-row">
-            <span class="rate-label">Factory:</span>
-            <span id="selected-factory" class="rate-value"></span>
-          </div>
-          <div class="rate-row rate-highlight">
-            <span class="rate-label">Rate per SQM:</span>
-            <span id="selected-rate" class="rate-value rate-amount"></span>
+      <!-- Step 3: Rate + Calculation -->
+      <div id="rate-section" style="display: none;">
+        <div class="card-section">
+          <label class="section-label">3. Rate Details</label>
+          <div id="rate-display" class="rate-display">
+            <div class="rate-row">
+              <span class="rate-label">Supplier:</span>
+              <span id="selected-supplier" class="rate-value"></span>
+            </div>
+            <div class="rate-row">
+              <span class="rate-label">Factory:</span>
+              <span id="selected-factory" class="rate-value"></span>
+            </div>
+            <div class="rate-row rate-highlight">
+              <span class="rate-label">Rate per SQM:</span>
+              <span id="selected-rate" class="rate-value rate-amount"></span>
+            </div>
           </div>
         </div>
-        <div id="calculation-module" class="calculation-module">
-          <div class="input-grid">
-            <div class="input-group">
-              <label for="carton-preset">Carton Size</label>
-              <select id="carton-preset" class="form-control">
+
+        <div class="card-section">
+          <label class="section-label">Carton Calculation</label>
+          <div id="calculation-module" class="calculation-module">
+            <div class="form-group">
+              <label class="select-label" for="carton-preset">Carton Size</label>
+              <select id="carton-preset" class="custom-select">
                 <option value="">-- Select Preset --</option>
                 <!-- Options populated by JS -->
                 <option value="custom">Custom Dimensions</option>
               </select>
             </div>
-            
+
             <div id="custom-dims" class="custom-dims" style="display: none;">
-              <div class="dim-group">
-                <label for="custom-l">L (mm)</label>
-                <input type="number" id="custom-l" class="form-control" min="1">
+              <div class="form-group floating-group">
+                <input type="number" id="custom-l" placeholder=" " min="1">
+                <label for="custom-l">Length (mm)</label>
               </div>
-              <div class="dim-group">
-                <label for="custom-w">W (mm)</label>
-                <input type="number" id="custom-w" class="form-control" min="1">
+              <div class="form-group floating-group">
+                <input type="number" id="custom-w" placeholder=" " min="1">
+                <label for="custom-w">Width (mm)</label>
               </div>
-              <div class="dim-group">
-                <label for="custom-h">H (mm)</label>
-                <input type="number" id="custom-h" class="form-control" min="1">
+              <div class="form-group floating-group">
+                <input type="number" id="custom-h" placeholder=" " min="1">
+                <label for="custom-h">Height (mm)</label>
               </div>
             </div>
 
-            <div class="input-group">
+            <div class="form-group floating-group" style="max-width: 280px;">
+              <input type="number" id="carton-qty" placeholder=" " min="1" step="1" value="1">
               <label for="carton-qty">Quantity</label>
-              <input type="number" id="carton-qty" class="form-control" min="1" step="1" value="1">
             </div>
           </div>
 
-          <div id="calc-instruction" class="calc-instruction">Enter dimensions and quantity to see calculation.</div>
+          <div id="calc-instruction" class="calc-instruction">Select a supplier and factory, then enter dimensions and quantity to see the calculation.</div>
 
-          <div id="calc-results" class="calc-results" style="display: none;">
-            <div class="results-grid">
-              <div class="result-box supplier-box">
-                <h4>Supplier Cost</h4>
-                <div class="res-row"><span>Type:</span> <strong id="res-supp-type">C-Flute</strong></div>
-                <div class="res-row"><span>Per SQM:</span> <strong id="res-supp-sqm"></strong></div>
-                <div class="res-row"><span>Per Carton:</span> <strong id="res-supp-cost"></strong></div>
-                <div class="res-total"><span>Total:</span> <strong id="res-supp-total"></strong></div>
-              </div>
-              <div class="result-box primark-box">
-                <h4>Primark Price</h4>
-                <div class="res-row"><span>Type:</span> <strong>C-Flute</strong></div>
-                <div class="res-row"><span>Per SQM:</span> <strong id="res-prim-sqm"></strong></div>
-                <div class="res-row"><span>Per Carton:</span> <strong id="res-prim-cost"></strong></div>
-                <div class="res-total"><span>Total:</span> <strong id="res-prim-total"></strong></div>
-              </div>
+          <div id="calc-results" class="results" style="display: none;">
+            <div class="result-item">
+              <span class="result-label">Supplier SQM / Carton</span>
+              <span class="result-value" id="res-supp-sqm"></span>
             </div>
-            
-            <div class="margin-container">
-              <div class="margin-label">Margin (Primark - Supplier)</div>
-              <div id="res-margin" class="margin-value"></div>
+            <div class="result-item">
+              <span class="result-label">Primark SQM / Carton</span>
+              <span class="result-value" id="res-prim-sqm"></span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Supplier Cost / Carton</span>
+              <span class="result-value" id="res-supp-cost"></span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Primark Price / Carton</span>
+              <span class="result-value" id="res-prim-cost"></span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Supplier Total</span>
+              <span class="result-value" id="res-supp-total"></span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Primark Total</span>
+              <span class="result-value" id="res-prim-total"></span>
+            </div>
+            <div class="result-item highlight-result full-width">
+              <span class="result-label">Margin (Primark - Supplier)</span>
+              <span class="result-value" id="res-margin"></span>
             </div>
           </div>
         </div>
+
+        <!-- Paper Consumption -->
         <section id="paper-consumption-card" class="paper-consumption-card" style="display: none;">
           <h3>Paper Consumption</h3>
           <p class="paper-subtitle">Per carton</p>
@@ -137,110 +158,21 @@
             <strong id="paper-consumption-sqm"></strong>
           </div>
         </section>
-        <button id="generate-quote-btn" class="btn btn-primary" disabled>Generate Quotation</button>
-      </section>
 
-      <!-- Step 4: Quotation Preview -->
-      <section class="card" id="quotation-section" style="display: none;">
-        <h2 class="section-title">4. Quotation Preview</h2>
-        <div id="quotation-preview" class="quotation-preview">
-        </div>
-        <button id="download-pdf-btn" class="btn btn-success">Download PDF</button>
-      </section>
-    </main>
-
-    <!-- Hidden PDF template -->
-    <div id="pdf-content" class="pdf-content" style="display: none;">
-      <div class="pdf-header">
-        <h1>Packaging Price Quotation</h1>
-        <p class="pdf-date" id="pdf-date"></p>
-      </div>
-      <table class="pdf-table">
-        <tr>
-          <td class="pdf-label">Packaging Supplier:</td>
-          <td class="pdf-value" id="pdf-supplier"></td>
-        </tr>
-        <tr>
-          <td class="pdf-label">Factory:</td>
-          <td class="pdf-value" id="pdf-factory"></td>
-        </tr>
-        <tr>
-          <td class="pdf-label">Rate per SQM:</td>
-          <td class="pdf-value" id="pdf-rate"></td>
-        </tr>
-      </table>
-      <div id="pdf-calc-section" style="display: none;">
-        <table class="pdf-table margin-top">
-          <tr>
-            <td class="pdf-label">Dimensions (mm):</td>
-            <td class="pdf-value" id="pdf-dims"></td>
-          </tr>
-          <tr>
-            <td class="pdf-label">Quantity:</td>
-            <td class="pdf-value" id="pdf-qty"></td>
-          </tr>
-        </table>
-        
-        <table class="pdf-table calc-table">
-          <thead>
-            <tr>
-              <th>Detail (C-Flute)</th>
-              <th>SQM/Carton</th>
-              <th>Rate / SQM</th>
-              <th>Price/Carton</th>
-              <th>Total Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Supplier</strong></td>
-              <td id="pdf-supp-sqm"></td>
-              <td id="pdf-supp-rate-display"></td>
-              <td id="pdf-supp-cost"></td>
-              <td id="pdf-supp-tot"></td>
-            </tr>
-            <tr>
-              <td><strong>Primark</strong></td>
-              <td id="pdf-prim-sqm"></td>
-              <td>$0.77</td>
-              <td id="pdf-prim-cost"></td>
-              <td id="pdf-prim-tot"></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <table id="pdf-paper-consumption" class="pdf-table paper-pdf-table" style="display: none;">
-          <thead>
-            <tr><th colspan="2">Paper Consumption (Per Carton)</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Board Length</td><td id="pdf-paper-board-length"></td></tr>
-            <tr><td>Stitching</td><td id="pdf-paper-stitching"></td></tr>
-            <tr><td>Actual Length</td><td id="pdf-paper-actual-length"></td></tr>
-            <tr><td>Fluting Space</td><td id="pdf-paper-fluting-space"></td></tr>
-            <tr><td>Width</td><td id="pdf-paper-width"></td></tr>
-            <tr><td>Divide</td><td id="pdf-paper-divide"></td></tr>
-            <tr><td>Cutting Space</td><td id="pdf-paper-cutting-space"></td></tr>
-            <tr><td>Board Width</td><td id="pdf-paper-board-width"></td></tr>
-            <tr><td>Paper Roll Width</td><td id="pdf-paper-roll-width"></td></tr>
-            <tr><td><strong>Paper Consumption</strong></td><td id="pdf-paper-consumption-sqm"></td></tr>
-          </tbody>
-        </table>
-
-        <div class="pdf-margin-box">
-          <strong>Margin: </strong> <span id="pdf-margin"></span>
-        </div>
-      </div>
-      <div class="pdf-footer">
-        <p>Generated: <span id="pdf-timestamp"></span></p>
+        <button id="export-pdf-btn" class="primary-btn" disabled>
+          <i data-lucide="download"></i> Export PDF
+        </button>
       </div>
     </div>
   </div>
 
+  <footer class="app-footer">
+    <p>&copy; 2026 PACD. All rights reserved. <span class="divider">|</span> Developed by <a href="https://ev1shoaib.netlify.app" target="_blank" class="developer-link">EV1</a></p>
+  </footer>
+
   <script src="lib/html2pdf.bundle.min.js"></script>
   <script src="js/data.js"></script>
   <script src="js/calculator.js"></script>
-  <script src="js/pdf.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
