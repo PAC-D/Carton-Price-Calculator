@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentPaperConsumption = null;
 
   // DOM references
-  const supplierTabs = document.getElementById('supplier-tabs');
+  const supplierSelect = document.getElementById('packaging-supplier');
   const factorySection = document.getElementById('factory-section');
   const factorySearch = document.getElementById('factory-search');
   const factoryTbody = document.getElementById('factory-tbody');
@@ -67,20 +67,25 @@ document.addEventListener('DOMContentLoaded', function() {
     inQty.addEventListener(evt, runCalculation);
   });
 
-  // Supplier tab click
-  supplierTabs.addEventListener('click', function(e) {
-    const btn = e.target.closest('.tab-btn');
-    if (!btn) return;
-    selectSupplier(btn.dataset.supplier);
+  // Supplier dropdown change
+  supplierSelect.addEventListener('change', function() {
+    const supplierKey = this.value;
+    if (supplierKey) {
+      selectSupplier(supplierKey);
+    } else {
+      // Reset when "Select Supplier" chosen
+      currentSupplier = null;
+      currentFactory = null;
+      factorySection.style.display = 'none';
+      rateSection.style.display = 'none';
+      exportPdfBtn.disabled = true;
+      runCalculation();
+    }
   });
 
   function selectSupplier(supplierKey) {
     currentSupplier = supplierKey;
     currentFactory = null;
-
-    document.querySelectorAll('.tab-btn').forEach(function(btn) {
-      btn.classList.toggle('active', btn.dataset.supplier === supplierKey);
-    });
 
     factorySection.style.display = 'block';
     rateSection.style.display = 'none';

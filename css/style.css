@@ -224,37 +224,6 @@ body {
   gap: 1rem;
 }
 
-/* Supplier tabs */
-.supplier-tabs {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.tab-btn {
-  padding: 12px 28px;
-  border: 2px solid var(--border);
-  background: white;
-  border-radius: 99px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: var(--text-muted);
-}
-
-.tab-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: #eff6ff;
-}
-
-.tab-btn.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-}
-
 /* Search input */
 .search-input {
   width: 100%;
@@ -587,15 +556,6 @@ body {
 
   .calculator-card {
     padding: 1.5rem;
-  }
-
-  .supplier-tabs {
-    flex-direction: column;
-  }
-
-  .tab-btn {
-    width: 100%;
-    text-align: center;
   }
 
   .input-grid,
