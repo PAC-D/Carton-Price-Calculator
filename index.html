@@ -60,8 +60,63 @@
             <span id="selected-rate" class="rate-value rate-amount"></span>
           </div>
         </div>
-        <div class="calculator-placeholder">
-          <p>Calculation section coming soon — custom formulas per supplier will be added here.</p>
+        <div id="calculation-module" class="calculation-module">
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="carton-preset">Carton Size</label>
+              <select id="carton-preset" class="form-control">
+                <option value="">-- Select Preset --</option>
+                <!-- Options populated by JS -->
+                <option value="custom">Custom Dimensions</option>
+              </select>
+            </div>
+            
+            <div id="custom-dims" class="custom-dims" style="display: none;">
+              <div class="dim-group">
+                <label for="custom-l">L (mm)</label>
+                <input type="number" id="custom-l" class="form-control" min="1">
+              </div>
+              <div class="dim-group">
+                <label for="custom-w">W (mm)</label>
+                <input type="number" id="custom-w" class="form-control" min="1">
+              </div>
+              <div class="dim-group">
+                <label for="custom-h">H (mm)</label>
+                <input type="number" id="custom-h" class="form-control" min="1">
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="carton-qty">Quantity</label>
+              <input type="number" id="carton-qty" class="form-control" min="1" step="1" value="1">
+            </div>
+          </div>
+
+          <div id="calc-instruction" class="calc-instruction">Enter dimensions and quantity to see calculation.</div>
+
+          <div id="calc-results" class="calc-results" style="display: none;">
+            <div class="results-grid">
+              <div class="result-box supplier-box">
+                <h4>Supplier Cost</h4>
+                <div class="res-row"><span>Type:</span> <strong id="res-supp-type">C-Flute</strong></div>
+                <div class="res-row"><span>Per SQM:</span> <strong id="res-supp-sqm"></strong></div>
+                <div class="res-row"><span>Per Carton:</span> <strong id="res-supp-cost"></strong></div>
+                <div class="res-total"><span>Total:</span> <strong id="res-supp-total"></strong></div>
+              </div>
+              <div class="result-box primark-box">
+                <h4>Primark Price</h4>
+                <div class="res-row"><span>Type:</span> <strong>C-Flute</strong></div>
+                <div class="res-row"><span>Per SQM:</span> <strong id="res-prim-sqm"></strong></div>
+                <div class="res-row"><span>Per Carton:</span> <strong id="res-prim-cost"></strong></div>
+                <div class="res-total"><span>Total:</span> <strong id="res-prim-total"></strong></div>
+              </div>
+            </div>
+            
+            <div class="margin-container">
+              <div class="margin-label">Margin (Primark - Supplier)</div>
+              <div id="res-margin" class="margin-value"></div>
+            </div>
+          </div>
         </div>
         <button id="generate-quote-btn" class="btn btn-primary" disabled>Generate Quotation</button>
       </section>
@@ -95,8 +150,49 @@
           <td class="pdf-value" id="pdf-rate"></td>
         </tr>
       </table>
-      <div class="pdf-placeholder">
-        <p>Detailed cost breakdown will be available in a future update.</p>
+      <div id="pdf-calc-section" style="display: none;">
+        <table class="pdf-table margin-top">
+          <tr>
+            <td class="pdf-label">Dimensions (mm):</td>
+            <td class="pdf-value" id="pdf-dims"></td>
+          </tr>
+          <tr>
+            <td class="pdf-label">Quantity:</td>
+            <td class="pdf-value" id="pdf-qty"></td>
+          </tr>
+        </table>
+        
+        <table class="pdf-table calc-table">
+          <thead>
+            <tr>
+              <th>Detail (C-Flute)</th>
+              <th>SQM/Carton</th>
+              <th>Rate / SQM</th>
+              <th>Price/Carton</th>
+              <th>Total Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Supplier</strong></td>
+              <td id="pdf-supp-sqm"></td>
+              <td id="pdf-supp-rate-display"></td>
+              <td id="pdf-supp-cost"></td>
+              <td id="pdf-supp-tot"></td>
+            </tr>
+            <tr>
+              <td><strong>Primark</strong></td>
+              <td id="pdf-prim-sqm"></td>
+              <td>$0.77</td>
+              <td id="pdf-prim-cost"></td>
+              <td id="pdf-prim-tot"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pdf-margin-box">
+          <strong>Margin: </strong> <span id="pdf-margin"></span>
+        </div>
       </div>
       <div class="pdf-footer">
         <p>Generated: <span id="pdf-timestamp"></span></p>
