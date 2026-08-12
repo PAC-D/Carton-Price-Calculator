@@ -13,10 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const selectedSupplierEl = document.getElementById('selected-supplier');
   const selectedFactoryEl = document.getElementById('selected-factory');
   const selectedRateEl = document.getElementById('selected-rate');
-  const generateQuoteBtn = document.getElementById('generate-quote-btn');
-  const quotationSection = document.getElementById('quotation-section');
-  const quotationPreview = document.getElementById('quotation-preview');
-  const downloadPdfBtn = document.getElementById('download-pdf-btn');
+  const exportPdfBtn = document.getElementById('export-pdf-btn');
 
   const presetSelect = document.getElementById('carton-preset');
   const customDims = document.getElementById('custom-dims');
@@ -24,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const inW = document.getElementById('custom-w');
   const inH = document.getElementById('custom-h');
   const inQty = document.getElementById('carton-qty');
-  
+
   const calcInstruction = document.getElementById('calc-instruction');
   const calcResults = document.getElementById('calc-results');
   const paperConsumptionCard = document.getElementById('paper-consumption-card');
@@ -38,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const paperBoardWidth = document.getElementById('paper-board-width');
   const paperRollWidth = document.getElementById('paper-roll-width');
   const paperConsumptionSqm = document.getElementById('paper-consumption-sqm');
-  
+
   // Populate preset options BEFORE adding listeners
   CARTON_PRESETS.forEach(preset => {
     let opt = document.createElement('option');
@@ -49,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   presetSelect.addEventListener('change', function() {
     if (this.value === 'custom') {
-      customDims.style.display = 'flex';
-      inL.value = ''; inW.value = ''; inH.value = ''; // clear previous
+      customDims.style.display = 'grid';
+      inL.value = ''; inW.value = ''; inH.value = '';
     } else {
       customDims.style.display = 'none';
       if (this.value) {
@@ -74,26 +71,21 @@ document.addEventListener('DOMContentLoaded', function() {
   supplierTabs.addEventListener('click', function(e) {
     const btn = e.target.closest('.tab-btn');
     if (!btn) return;
-    const supplierKey = btn.dataset.supplier;
-    selectSupplier(supplierKey);
+    selectSupplier(btn.dataset.supplier);
   });
 
   function selectSupplier(supplierKey) {
     currentSupplier = supplierKey;
     currentFactory = null;
 
-    // Update tab active state
     document.querySelectorAll('.tab-btn').forEach(function(btn) {
       btn.classList.toggle('active', btn.dataset.supplier === supplierKey);
     });
 
-    // Show factory section, hide later sections
     factorySection.style.display = 'block';
     rateSection.style.display = 'none';
-    quotationSection.style.display = 'none';
-    generateQuoteBtn.disabled = true;
+    exportPdfBtn.disabled = true;
 
-    // Clear search and render factories
     factorySearch.value = '';
     renderFactories(supplierKey, '');
     runCalculation();
@@ -144,26 +136,19 @@ document.addEventListener('DOMContentLoaded', function() {
     var supplier = SUPPLIERS[currentSupplier];
     var factory = supplier.factories.find(function(f) { return f.name === factoryName; });
 
-    // Update selected row highlight
     renderFactories(currentSupplier, factorySearch.value);
 
-    // Show rate section
     rateSection.style.display = 'block';
     selectedSupplierEl.textContent = supplier.name;
     selectedFactoryEl.textContent = factory.name;
     selectedRateEl.textContent = '$' + factory.rate.toFixed(2);
 
-    // Enable generate button
     runCalculation();
-
-    // Hide quotation section on new selection
-    quotationSection.style.display = 'none';
   }
 
   function runCalculation() {
-    // defaults
-    generateQuoteBtn.disabled = true;
-    calcResults.style.display = 'none';
+    exportPdfBtn.disabled = true;
+    calcResults.classList.remove('show');
     calcInstruction.style.display = 'block';
     currentPaperConsumption = null;
     paperConsumptionCard.style.display = 'none';
@@ -179,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let supplier = SUPPLIERS[currentSupplier];
     let factory = supplier.factories.find(f => f.name === currentFactory);
-    
+
     // Perform calculation
     let results = calculatePrice(supplier.formulaId, l, w, h, qty, factory.rate);
     if (!results) return;
@@ -210,76 +195,68 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let elMargin = document.getElementById('res-margin');
     elMargin.textContent = '$' + results.margin.toFixed(2);
-    elMargin.className = 'margin-value ' + (results.margin >= 0 ? 'text-positive' : 'text-negative');
+    elMargin.className = 'result-value ' + (results.margin >= 0 ? 'text-positive' : 'text-negative');
 
     // UI toggle
     calcInstruction.style.display = 'none';
-    calcResults.style.display = 'block';
-    generateQuoteBtn.disabled = false;
+    calcResults.classList.add('show');
+    exportPdfBtn.disabled = false;
   }
 
-  // Generate quotation
-  generateQuoteBtn.addEventListener('click', function() {
+  // Export PDF
+  exportPdfBtn.addEventListener('click', function() {
     if (!currentSupplier || !currentFactory) return;
 
     var supplier = SUPPLIERS[currentSupplier];
     var factory = supplier.factories.find(function(f) { return f.name === currentFactory; });
 
-    var now = new Date();
-    var dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    var timestampStr = now.toLocaleString('en-US');
+    var presetLabel = presetSelect.value === 'custom'
+      ? 'Custom Dimensions'
+      : (presetSelect.selectedOptions[0] ? presetSelect.selectedOptions[0].textContent : '');
 
-    // Update PDF hidden template
-    document.getElementById('pdf-date').textContent = dateStr;
-    document.getElementById('pdf-supplier').textContent = supplier.name;
-    document.getElementById('pdf-factory').textContent = factory.name;
-    document.getElementById('pdf-rate').textContent = '$' + factory.rate.toFixed(2) + ' per SQM';
-    document.getElementById('pdf-timestamp').textContent = timestampStr;
+    var printData = {
+      supplier: {
+        supplierKey: currentSupplier,
+        supplierName: supplier.name,
+        factoryName: factory.name,
+        ratePerSqm: '$' + factory.rate.toFixed(2)
+      },
+      calc: {
+        presetLabel: presetLabel,
+        l: inL.value,
+        w: inW.value,
+        h: inH.value,
+        qty: inQty.value
+      },
+      results: {
+        supplierSqm: document.getElementById('res-supp-sqm').textContent,
+        supplierCostPerCarton: document.getElementById('res-supp-cost').textContent,
+        supplierTotalCost: document.getElementById('res-supp-total').textContent,
+        primarkSqm: document.getElementById('res-prim-sqm').textContent,
+        primarkCostPerCarton: document.getElementById('res-prim-cost').textContent,
+        primarkTotalPrice: document.getElementById('res-prim-total').textContent,
+        margin: document.getElementById('res-margin').textContent
+      },
+      paper: null
+    };
 
-    // Calc payload read directly from UI
-    let L = inL.value, W = inW.value, H = inH.value, QTY = inQty.value;
-    document.getElementById('pdf-dims').textContent = L + ' x ' + W + ' x ' + H;
-    document.getElementById('pdf-qty').textContent = QTY;
-    
-    document.getElementById('pdf-supp-sqm').textContent = document.getElementById('res-supp-sqm').textContent;
-    document.getElementById('pdf-supp-rate-display').textContent = '$' + factory.rate.toFixed(2);
-    document.getElementById('pdf-supp-cost').textContent = document.getElementById('res-supp-cost').textContent;
-    document.getElementById('pdf-supp-tot').textContent = document.getElementById('res-supp-total').textContent;
-
-    document.getElementById('pdf-prim-sqm').textContent = document.getElementById('res-prim-sqm').textContent;
-    document.getElementById('pdf-prim-cost').textContent = document.getElementById('res-prim-cost').textContent;
-    document.getElementById('pdf-prim-tot').textContent = document.getElementById('res-prim-total').textContent;
-    
     if (currentPaperConsumption) {
-      document.getElementById('pdf-paper-board-length').textContent = currentPaperConsumption.boardLength + ' mm';
-      document.getElementById('pdf-paper-stitching').textContent = currentPaperConsumption.stitching + ' mm';
-      document.getElementById('pdf-paper-actual-length').textContent = currentPaperConsumption.actualLength + ' mm';
-      document.getElementById('pdf-paper-fluting-space').textContent = currentPaperConsumption.flutingSpace + ' mm';
-      document.getElementById('pdf-paper-width').textContent = currentPaperConsumption.width + ' mm';
-      document.getElementById('pdf-paper-divide').textContent = currentPaperConsumption.divide;
-      document.getElementById('pdf-paper-cutting-space').textContent = currentPaperConsumption.cuttingSpace + ' mm';
-      document.getElementById('pdf-paper-board-width').textContent = currentPaperConsumption.boardWidth + ' mm';
-      document.getElementById('pdf-paper-roll-width').textContent = currentPaperConsumption.paperRollWidth + ' mm';
-      document.getElementById('pdf-paper-consumption-sqm').textContent = currentPaperConsumption.paperConsumptionSqm.toFixed(4) + ' SQM';
-      document.getElementById('pdf-paper-consumption').style.display = 'table';
+      printData.paper = {
+        boardLength: currentPaperConsumption.boardLength + ' mm',
+        stitching: currentPaperConsumption.stitching + ' mm',
+        actualLength: currentPaperConsumption.actualLength + ' mm',
+        flutingSpace: currentPaperConsumption.flutingSpace + ' mm',
+        width: currentPaperConsumption.width + ' mm',
+        divide: currentPaperConsumption.divide,
+        cuttingSpace: currentPaperConsumption.cuttingSpace + ' mm',
+        boardWidth: currentPaperConsumption.boardWidth + ' mm',
+        paperRollWidth: currentPaperConsumption.paperRollWidth + ' mm',
+        paperConsumptionSqm: currentPaperConsumption.paperConsumptionSqm.toFixed(4) + ' SQM'
+      };
     }
-    document.getElementById('pdf-margin').textContent = document.getElementById('res-margin').textContent;
-    
-    // Toggle block
-    document.getElementById('pdf-calc-section').style.display = 'block';
-    
-    // Show preview (No exact mirrored HTML copy needed since pdfContent is styled for view)
-    quotationPreview.innerHTML = document.getElementById('pdf-content').innerHTML;
-    // Fix IDs in the clone for safely stripping duplication (just clear them)
-    quotationPreview.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
 
-    quotationSection.style.display = 'block';
-    quotationSection.scrollIntoView({ behavior: 'smooth' });
-  });
-
-  // Download PDF
-  downloadPdfBtn.addEventListener('click', function() {
-    generatePDF();
+    window.localStorage.setItem('cartonPrintData', JSON.stringify(printData));
+    window.open('pdf_export.html', '_blank');
   });
 
   // Utility: escape HTML to prevent XSS
@@ -287,5 +264,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var div = document.createElement('div');
     div.appendChild(document.createTextNode(text));
     return div.innerHTML;
+  }
+
+  // Render Lucide icons (loads after DOMContentLoaded on slow networks)
+  if (window.lucide && lucide.createIcons) {
+    lucide.createIcons();
   }
 });
