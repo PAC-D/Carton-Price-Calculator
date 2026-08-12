@@ -17,6 +17,47 @@ document.addEventListener('DOMContentLoaded', function() {
   const quotationPreview = document.getElementById('quotation-preview');
   const downloadPdfBtn = document.getElementById('download-pdf-btn');
 
+  const presetSelect = document.getElementById('carton-preset');
+  const customDims = document.getElementById('custom-dims');
+  const inL = document.getElementById('custom-l');
+  const inW = document.getElementById('custom-w');
+  const inH = document.getElementById('custom-h');
+  const inQty = document.getElementById('carton-qty');
+  
+  const calcInstruction = document.getElementById('calc-instruction');
+  const calcResults = document.getElementById('calc-results');
+  
+  // Populate preset options BEFORE adding listeners
+  CARTON_PRESETS.forEach(preset => {
+    let opt = document.createElement('option');
+    opt.value = preset.id;
+    opt.textContent = preset.label;
+    presetSelect.insertBefore(opt, presetSelect.lastElementChild);
+  });
+
+  presetSelect.addEventListener('change', function() {
+    if (this.value === 'custom') {
+      customDims.style.display = 'flex';
+      inL.value = ''; inW.value = ''; inH.value = ''; // clear previous
+    } else {
+      customDims.style.display = 'none';
+      if (this.value) {
+        const p = CARTON_PRESETS.find(x => x.id === this.value);
+        inL.value = p.l; inW.value = p.w; inH.value = p.h;
+      } else {
+        inL.value = ''; inW.value = ''; inH.value = '';
+      }
+    }
+    runCalculation();
+  });
+
+  ['input', 'change'].forEach(evt => {
+    inL.addEventListener(evt, runCalculation);
+    inW.addEventListener(evt, runCalculation);
+    inH.addEventListener(evt, runCalculation);
+    inQty.addEventListener(evt, runCalculation);
+  });
+
   // Supplier tab click
   supplierTabs.addEventListener('click', function(e) {
     const btn = e.target.closest('.tab-btn');
@@ -43,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Clear search and render factories
     factorySearch.value = '';
     renderFactories(supplierKey, '');
+    runCalculation();
   }
 
   // Factory search
@@ -100,10 +142,51 @@ document.addEventListener('DOMContentLoaded', function() {
     selectedRateEl.textContent = '$' + factory.rate.toFixed(2);
 
     // Enable generate button
-    generateQuoteBtn.disabled = false;
+    runCalculation();
 
     // Hide quotation section on new selection
     quotationSection.style.display = 'none';
+  }
+
+  function runCalculation() {
+    // defaults
+    generateQuoteBtn.disabled = true;
+    calcResults.style.display = 'none';
+    calcInstruction.style.display = 'block';
+
+    if (!currentSupplier || !currentFactory) return;
+
+    let l = parseFloat(inL.value);
+    let w = parseFloat(inW.value);
+    let h = parseFloat(inH.value);
+    let qty = parseInt(inQty.value, 10);
+
+    if (!l || !w || !h || !qty || l <= 0 || w <= 0 || h <= 0 || qty <= 0) return;
+
+    let supplier = SUPPLIERS[currentSupplier];
+    let factory = supplier.factories.find(f => f.name === currentFactory);
+    
+    // Perform calculation
+    let results = calculatePrice(supplier.formulaId, l, w, h, qty, factory.rate);
+    if (!results) return;
+
+    // Display updates
+    document.getElementById('res-supp-sqm').textContent = results.supplierSqm.toFixed(4) + ' SQM';
+    document.getElementById('res-supp-cost').textContent = '$' + results.supplierCostPerCarton.toFixed(2);
+    document.getElementById('res-supp-total').textContent = '$' + results.supplierTotalCost.toFixed(2);
+
+    document.getElementById('res-prim-sqm').textContent = results.primarkSqm.toFixed(4) + ' SQM';
+    document.getElementById('res-prim-cost').textContent = '$' + results.primarkPricePerCarton.toFixed(2);
+    document.getElementById('res-prim-total').textContent = '$' + results.primarkTotalPrice.toFixed(2);
+
+    let elMargin = document.getElementById('res-margin');
+    elMargin.textContent = '$' + results.margin.toFixed(2);
+    elMargin.className = 'margin-value ' + (results.margin >= 0 ? 'text-positive' : 'text-negative');
+
+    // UI toggle
+    calcInstruction.style.display = 'none';
+    calcResults.style.display = 'block';
+    generateQuoteBtn.disabled = false;
   }
 
   // Generate quotation
@@ -124,30 +207,31 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('pdf-rate').textContent = '$' + factory.rate.toFixed(2) + ' per SQM';
     document.getElementById('pdf-timestamp').textContent = timestampStr;
 
-    // Show preview (mirror of PDF content)
-    quotationPreview.innerHTML =
-      '<div style="text-align:center;margin-bottom:16px;">' +
-        '<h2 style="color:#1e3a5f;">Packaging Price Quotation</h2>' +
-        '<p style="color:#64748b;">' + dateStr + '</p>' +
-      '</div>' +
-      '<table style="width:100%;border-collapse:collapse;margin-bottom:16px;">' +
-        '<tr><td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;color:#64748b;font-weight:600;">Packaging Supplier:</td>' +
-          '<td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;font-weight:600;color:#1e3a5f;">' + escapeHtml(supplier.name) + '</td></tr>' +
-        '<tr><td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;color:#64748b;font-weight:600;">Factory:</td>' +
-          '<td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;font-weight:600;color:#1e3a5f;">' + escapeHtml(factory.name) + '</td></tr>' +
-        '<tr><td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;color:#64748b;font-weight:600;">Rate per SQM:</td>' +
-          '<td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;font-weight:600;color:#059669;font-size:18px;">$' + factory.rate.toFixed(2) + '</td></tr>' +
-      '</table>' +
-      '<div style="background:#f8fafc;border-radius:6px;padding:12px;text-align:center;color:#94a3b8;font-size:13px;">' +
-        'Detailed cost breakdown will be available in a future update.' +
-      '</div>' +
-      '<div style="text-align:center;margin-top:16px;font-size:12px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:8px;">' +
-        'Generated: ' + timestampStr +
-      '</div>';
+    // Calc payload read directly from UI
+    let L = inL.value, W = inW.value, H = inH.value, QTY = inQty.value;
+    document.getElementById('pdf-dims').textContent = L + ' x ' + W + ' x ' + H;
+    document.getElementById('pdf-qty').textContent = QTY;
+    
+    document.getElementById('pdf-supp-sqm').textContent = document.getElementById('res-supp-sqm').textContent;
+    document.getElementById('pdf-supp-rate-display').textContent = '$' + factory.rate.toFixed(2);
+    document.getElementById('pdf-supp-cost').textContent = document.getElementById('res-supp-cost').textContent;
+    document.getElementById('pdf-supp-tot').textContent = document.getElementById('res-supp-total').textContent;
+
+    document.getElementById('pdf-prim-sqm').textContent = document.getElementById('res-prim-sqm').textContent;
+    document.getElementById('pdf-prim-cost').textContent = document.getElementById('res-prim-cost').textContent;
+    document.getElementById('pdf-prim-tot').textContent = document.getElementById('res-prim-total').textContent;
+    
+    document.getElementById('pdf-margin').textContent = document.getElementById('res-margin').textContent;
+    
+    // Toggle block
+    document.getElementById('pdf-calc-section').style.display = 'block';
+    
+    // Show preview (No exact mirrored HTML copy needed since pdfContent is styled for view)
+    quotationPreview.innerHTML = document.getElementById('pdf-content').innerHTML;
+    // Fix IDs in the clone for safely stripping duplication (just clear them)
+    quotationPreview.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
 
     quotationSection.style.display = 'block';
-
-    // Scroll to quotation
     quotationSection.scrollIntoView({ behavior: 'smooth' });
   });
 
