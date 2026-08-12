@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // State
   let currentSupplier = null;
   let currentFactory = null;
+  let currentPaperConsumption = null;
 
   // DOM references
   const supplierTabs = document.getElementById('supplier-tabs');
@@ -26,6 +27,17 @@ document.addEventListener('DOMContentLoaded', function() {
   
   const calcInstruction = document.getElementById('calc-instruction');
   const calcResults = document.getElementById('calc-results');
+  const paperConsumptionCard = document.getElementById('paper-consumption-card');
+  const paperBoardLength = document.getElementById('paper-board-length');
+  const paperStitching = document.getElementById('paper-stitching');
+  const paperActualLength = document.getElementById('paper-actual-length');
+  const paperFlutingSpace = document.getElementById('paper-fluting-space');
+  const paperWidth = document.getElementById('paper-width');
+  const paperDivide = document.getElementById('paper-divide');
+  const paperCuttingSpace = document.getElementById('paper-cutting-space');
+  const paperBoardWidth = document.getElementById('paper-board-width');
+  const paperRollWidth = document.getElementById('paper-roll-width');
+  const paperConsumptionSqm = document.getElementById('paper-consumption-sqm');
   
   // Populate preset options BEFORE adding listeners
   CARTON_PRESETS.forEach(preset => {
@@ -153,6 +165,8 @@ document.addEventListener('DOMContentLoaded', function() {
     generateQuoteBtn.disabled = true;
     calcResults.style.display = 'none';
     calcInstruction.style.display = 'block';
+    currentPaperConsumption = null;
+    paperConsumptionCard.style.display = 'none';
 
     if (!currentSupplier || !currentFactory) return;
 
@@ -169,6 +183,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Perform calculation
     let results = calculatePrice(supplier.formulaId, l, w, h, qty, factory.rate);
     if (!results) return;
+
+    currentPaperConsumption = calculatePaperConsumption(currentSupplier, l, w, h);
+    if (currentPaperConsumption) {
+      paperBoardLength.textContent = currentPaperConsumption.boardLength + ' mm';
+      paperStitching.textContent = currentPaperConsumption.stitching + ' mm';
+      paperActualLength.textContent = currentPaperConsumption.actualLength + ' mm';
+      paperFlutingSpace.textContent = currentPaperConsumption.flutingSpace + ' mm';
+      paperWidth.textContent = currentPaperConsumption.width + ' mm';
+      paperDivide.textContent = currentPaperConsumption.divide;
+      paperCuttingSpace.textContent = currentPaperConsumption.cuttingSpace + ' mm';
+      paperBoardWidth.textContent = currentPaperConsumption.boardWidth + ' mm';
+      paperRollWidth.textContent = currentPaperConsumption.paperRollWidth + ' mm';
+      paperConsumptionSqm.textContent = currentPaperConsumption.paperConsumptionSqm.toFixed(4) + ' SQM';
+      paperConsumptionCard.style.display = 'block';
+    }
 
     // Display updates
     document.getElementById('res-supp-sqm').textContent = results.supplierSqm.toFixed(4) + ' SQM';
@@ -221,6 +250,19 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('pdf-prim-cost').textContent = document.getElementById('res-prim-cost').textContent;
     document.getElementById('pdf-prim-tot').textContent = document.getElementById('res-prim-total').textContent;
     
+    if (currentPaperConsumption) {
+      document.getElementById('pdf-paper-board-length').textContent = currentPaperConsumption.boardLength + ' mm';
+      document.getElementById('pdf-paper-stitching').textContent = currentPaperConsumption.stitching + ' mm';
+      document.getElementById('pdf-paper-actual-length').textContent = currentPaperConsumption.actualLength + ' mm';
+      document.getElementById('pdf-paper-fluting-space').textContent = currentPaperConsumption.flutingSpace + ' mm';
+      document.getElementById('pdf-paper-width').textContent = currentPaperConsumption.width + ' mm';
+      document.getElementById('pdf-paper-divide').textContent = currentPaperConsumption.divide;
+      document.getElementById('pdf-paper-cutting-space').textContent = currentPaperConsumption.cuttingSpace + ' mm';
+      document.getElementById('pdf-paper-board-width').textContent = currentPaperConsumption.boardWidth + ' mm';
+      document.getElementById('pdf-paper-roll-width').textContent = currentPaperConsumption.paperRollWidth + ' mm';
+      document.getElementById('pdf-paper-consumption-sqm').textContent = currentPaperConsumption.paperConsumptionSqm.toFixed(4) + ' SQM';
+      document.getElementById('pdf-paper-consumption').style.display = 'table';
+    }
     document.getElementById('pdf-margin').textContent = document.getElementById('res-margin').textContent;
     
     // Toggle block
