@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // DOM references
   const supplierSelect = document.getElementById('packaging-supplier');
+  const welcomePanel = document.getElementById('welcome-panel');
   const factorySection = document.getElementById('factory-section');
   const factorySearch = document.getElementById('factory-search');
   const factoryTbody = document.getElementById('factory-tbody');
@@ -67,6 +68,18 @@ document.addEventListener('DOMContentLoaded', function() {
     inQty.addEventListener(evt, runCalculation);
   });
 
+  // Welcome panel toggle helpers
+  function hideWelcome() {
+    if (!welcomePanel) return;
+    if (welcomePanel.classList.contains('welcome-collapsed')) return;
+    welcomePanel.classList.add('welcome-collapsed');
+  }
+
+  function showWelcome() {
+    if (!welcomePanel) return;
+    welcomePanel.classList.remove('welcome-collapsed');
+  }
+
   // Supplier dropdown change
   supplierSelect.addEventListener('change', function() {
     const supplierKey = this.value;
@@ -79,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
       factorySection.style.display = 'none';
       rateSection.style.display = 'none';
       exportPdfBtn.disabled = true;
+      showWelcome();
       runCalculation();
     }
   });
@@ -90,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     factorySection.style.display = 'block';
     rateSection.style.display = 'none';
     exportPdfBtn.disabled = true;
+    hideWelcome();
 
     factorySearch.value = '';
     renderFactories(supplierKey, '');
@@ -116,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (filtered.length === 0) {
       var row = document.createElement('tr');
-      row.innerHTML = '<td colspan="2" style="text-align:center;color:#94a3b8;padding:20px;">No matching factories found.</td>';
+      row.innerHTML = '<td style="text-align:center;color:#94a3b8;padding:20px;">No matching factories found.</td>';
       factoryTbody.appendChild(row);
       return;
     }
@@ -126,9 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (currentFactory && factory.name === currentFactory) {
         row.classList.add('selected');
       }
-      row.innerHTML =
-        '<td>' + escapeHtml(factory.name) + '</td>' +
-        '<td class="rate-cell">$' + factory.rate.toFixed(2) + '</td>';
+      row.innerHTML = '<td>' + escapeHtml(factory.name) + '</td>';
       row.addEventListener('click', function() {
         selectFactory(factory.name);
       });

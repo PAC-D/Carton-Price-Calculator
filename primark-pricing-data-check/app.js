@@ -60,7 +60,7 @@ if (typeof document !== 'undefined') {
       })
       .then(text => {
         state.rows = parseCSV(text);
-        els.title.textContent = 'Primark Pricing Data Check (' + state.rows.length + ' rows)';
+        els.title.textContent = 'Primark Pricing Data Check';
         populateFilters();
         render();
         els.exportBtn.disabled = false;
@@ -99,7 +99,7 @@ if (typeof document !== 'undefined') {
     els.factorySearch.addEventListener('input', render);
     els.exportBtn.addEventListener('click', exportPDF);
 
-    function exportPDF() {
+    async function exportPDF() {
       if (!window.jspdf) {
         alert('PDF library failed to load. Check your internet connection.');
         return;
@@ -118,17 +118,35 @@ if (typeof document !== 'undefined') {
         [i + 1, row.supplier, row.factory, formatPrice(row.price)]);
 
       const doc = new window.jspdf.jsPDF();
-      doc.setFontSize(16);
-      doc.setTextColor(0, 32, 91);
-      doc.text('Primark Pricing Data Check', 14, 16);
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(10);
-      doc.text('Exported: ' + new Date().toLocaleString(), 14, 23);
-      const supplierLabel = els.supplierFilter.value;
-      const factoryLabel = els.factorySearch.value.trim() || 'All';
-      doc.text('Filters - Supplier: ' + supplierLabel + ' | Factory: "' + factoryLabel + '"', 14, 29);
+      const logos = await loadLogos();
+
+      function drawNavbar() {
+        if (logos) {
+          doc.addImage(logos[0], 'PNG', 14, 8, 36, 12.1);
+          doc.addImage(logos[1], 'PNG', 140, 11, 56, 7.6);
+        } else {
+          doc.setFontSize(12);
+          doc.setTextColor(0, 32, 91);
+          doc.text('PACD', 14, 16);
+          doc.setFontSize(10);
+          doc.setTextColor(227, 24, 55);
+          doc.text('Primark', 196, 16, { align: 'right' });
+        }
+        doc.setDrawColor(0, 32, 91);
+        doc.setLineWidth(0.8);
+        doc.line(14, 22, 196, 22);
+      }
+
+      drawNavbar();
+      doc.setFontSize(13);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(227, 24, 55);
+      doc.text('Carton Price for Factory', 14, 31);
+      doc.setFont('helvetica', 'normal');
+
       doc.autoTable({
-        startY: 34,
+        startY: 36,
+        margin: { top: 26 },
         head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)']],
         body: body,
         styles: { fontSize: 9, cellPadding: 2 },
@@ -137,16 +155,48 @@ if (typeof document !== 'undefined') {
           0: { cellWidth: 12 },
           3: { halign: 'right', cellWidth: 30 }
         },
-        didDrawPage: function () {
-          const page = doc.internal.getCurrentPageInfo().pageNumber;
+        willDrawPage: function (data) {
+          if (data.pageNumber > 1) drawNavbar();
+        },
+        didDrawPage: function (data) {
           doc.setFontSize(8);
           doc.setTextColor(100, 116, 139);
           doc.text('PACD © 2026', 14, 290);
           doc.setTextColor(0, 0, 0);
-          doc.text('Page ' + page, 198, 290, { align: 'right' });
+          doc.text('Page ' + data.pageNumber, 198, 290, { align: 'right' });
         }
       });
       doc.save('primark-pricing-' + new Date().toISOString().slice(0, 10) + '.pdf');
+    }
+
+    function loadImageAsDataURL(src) {
+      return new Promise(function (resolve, reject) {
+        const img = new Image();
+        img.onload = function () {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+          } catch (e) {
+            reject(e);
+          }
+        };
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    async function loadLogos() {
+      try {
+        return await Promise.all([
+          loadImageAsDataURL('../pacd.png'),
+          loadImageAsDataURL('../assets/primark-logo.png')
+        ]);
+      } catch (e) {
+        return null;
+      }
     }
   }
 }

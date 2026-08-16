@@ -18,11 +18,45 @@
     <div class="logo-section">
       <img src="pacd.png" alt="PACD Logo" class="logo-img">
     </div>
-    <h1>Carton Price Calculator</h1>
-    <a href="primark-pricing-data-check/" class="nav-sub-link">Pricing Data Check</a>
+    <div class="nav-right">
+      <img src="assets/primark-logo.png" alt="Primark Logo" class="primark-logo">
+    </div>
   </nav>
 
   <div class="main-container">
+      <section id="welcome-panel" class="welcome-panel" aria-label="Welcome">
+        <div class="welcome-collapse welcome-collapse-icon"><div class="welcome-icon"><i data-lucide="package-search"></i></div></div>
+        <h2 class="welcome-title">Carton Price Calculator</h2>
+        <div class="welcome-collapse welcome-collapse-tagline"><p class="welcome-tagline">Compare supplier rates against Primark benchmarks for corrugated cartons</p></div>
+        <div class="welcome-collapse welcome-collapse-steps"><ol class="welcome-steps">
+          <li class="welcome-step">
+            <span class="welcome-step-num">1</span>
+            <div class="welcome-step-text">
+              <strong>Select a Packaging Supplier</strong>
+              <span>Epyllion, M&amp;U, or Uniglory</span>
+            </div>
+          </li>
+          <li class="welcome-step">
+            <span class="welcome-step-num">2</span>
+            <div class="welcome-step-text">
+              <strong>Choose a Garment Factory</strong>
+              <span>Pick from the supplier&rsquo;s factory list</span>
+            </div>
+          </li>
+          <li class="welcome-step">
+            <span class="welcome-step-num">3</span>
+            <div class="welcome-step-text">
+              <strong>Enter dimensions &amp; export</strong>
+              <span>Calculate cost, margin, and PDF quote</span>
+            </div>
+          </li>
+        </ol></div>
+        <div class="welcome-collapse welcome-collapse-cta"><div class="welcome-cta">
+          <span>Start by selecting a supplier below</span>
+          <i data-lucide="arrow-down"></i>
+        </div></div>
+      </section>
+
     <div class="calculator-card">
 
       <!-- Step 1: Supplier Selection -->
@@ -48,7 +82,6 @@
             <thead>
               <tr>
                 <th>Factory Name</th>
-                <th>Rate/SQM (USD)</th>
               </tr>
             </thead>
             <tbody id="factory-tbody"></tbody>
@@ -79,6 +112,7 @@
         <div class="card-section">
           <label class="section-label">Carton Calculation</label>
           <div id="calculation-module" class="calculation-module">
+            <div class="calc-row">
             <div class="form-group">
               <label class="select-label" for="carton-preset">Carton Size</label>
               <select id="carton-preset" class="custom-select">
@@ -103,16 +137,17 @@
               </div>
             </div>
 
-            <div class="form-group floating-group" style="max-width: 280px;">
+            <div class="form-group floating-group">
               <input type="number" id="carton-qty" placeholder=" " min="1" step="1" value="1">
               <label for="carton-qty">Quantity</label>
+            </div>
             </div>
           </div>
 
           <div id="calc-instruction" class="calc-instruction">Select a supplier and factory, then enter dimensions and quantity to see the calculation.</div>
 
           <div id="calc-results" class="results">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; grid-column: span 2;">
+            <div class="result-pair">
               <div class="result-item" style="background: #f8fafc; border-color: #e2e8f0; display: block; border: 1px solid #e2e8f0;">
                 <h4 style="margin-bottom: 12px; color: #1e293b; font-size: 16px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;">Supplier Cost</h4>
                 <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
@@ -182,6 +217,7 @@
   </div>
 
   <footer class="app-footer">
+    <a href="primark-pricing-data-check/" class="footer-link">Pricing Data Check</a>
     <p>&copy; 2026 PACD. All rights reserved. <span class="divider">|</span> Developed by <a href="https://ev1shoaib.netlify.app" target="_blank" class="developer-link">EV1</a></p>
   </footer>
 
