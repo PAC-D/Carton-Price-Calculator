@@ -18,6 +18,10 @@ A specialized web application designed for calculating corrugated carton prices,
 4.  **Paper Consumption View**: Analyze required stitching lengths, divided sheet boards, and overall SQM carton footprints.
 5.  *(Hidden Module / Optional)* **Generate PDF**: Upon unlocking configuration bounds, a `pdf_export.html` bridge exports data directly to a physical quote formatting page.
 
+## 🔗 Sub-pages
+
+*   **Pricing Data Check** (`primark-pricing-data-check/`): Standalone look-up of packaging rates (US $ per SQM) by factory and supplier, with filter and PDF export. Rate data is maintained separately in `primark-pricing-data-check/data.csv`.
+
 ## 🏗️ Technical Architecture
 
 This application is built as a static frontend bundle utilizing:

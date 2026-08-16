@@ -1,5 +1,8 @@
 # Version History
 
+## v2.1.0 (Pricing Data Check Subpage)
+*   **Pricing Data Check Subpage**: Added a PACD-themed subpage for packaging rate look-up by factory and packaging supplier, with supplier/factory filters and branded PDF export. Data maintained independently in `primark-pricing-data-check/data.csv`.
+
 ## v2.0.0 (PACD Brand Restyle)
 *   **PACD Visual Redesign**: Complete UI/UX redesign utilizing the official Navy/Red PACD aesthetic, Inter/Outfit typography, and floating form groups.
 *   **Supplier Configuration Upgrade**: Switched the old supplier-tab UI sequence into a polished `custom-select` dropdown matching the GitHub reference repository workflow.
