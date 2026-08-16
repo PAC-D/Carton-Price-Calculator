@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primark Pricing Data Check</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-decoration"></div>
+
+  <nav class="navbar">
+    <div class="logo-section">
+      <a href="../index.html" class="back-link">&#8592; Carton Price Calculator</a>
+      <span class="nav-divider"></span>
+      <img src="../pacd.png" alt="PACD Logo" class="logo-img">
+    </div>
+    <h1 id="page-title">Primark Pricing Data Check</h1>
+  </nav>
+
+  <div class="main-container">
+    <div class="calculator-card">
+
+      <div id="error-box" class="error-box" style="display: none;"></div>
+
+      <div class="card-section">
+        <label class="section-label">Filters</label>
+        <div class="filter-grid">
+          <div class="form-group">
+            <label class="select-label">Packaging Supplier</label>
+            <select id="supplier-filter" class="custom-select"></select>
+          </div>
+          <div class="form-group">
+            <label class="select-label">Factory</label>
+            <select id="factory-select" class="custom-select"></select>
+          </div>
+          <div class="form-group">
+            <label class="select-label">Factory Search</label>
+            <input type="text" id="factory-search" class="search-input no-margin" placeholder="Type to filter factories...">
+          </div>
+        </div>
+      </div>
+
+      <p id="row-count" class="row-count"></p>
+
+      <div class="table-container">
+        <table id="price-table" class="factory-table">
+          <thead>
+            <tr>
+              <th>SL</th>
+              <th>Packaging Supplier</th>
+              <th>Factory</th>
+              <th class="price-col">Price SQM (US $)</th>
+            </tr>
+          </thead>
+          <tbody id="price-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="export-area">
+        <button id="export-pdf" class="primary-btn" disabled>Export PDF</button>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 PACD. All rights reserved. <span class="divider">|</span> Developed by <a href="https://ev1shoaib.netlify.app" target="_blank" class="developer-link">EV1</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
