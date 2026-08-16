@@ -95,8 +95,14 @@ if (typeof document !== 'undefined') {
     }
 
     els.supplierFilter.addEventListener('change', render);
-    els.factorySelect.addEventListener('change', render);
-    els.factorySearch.addEventListener('input', render);
+    els.factorySelect.addEventListener('change', function() {
+      els.factorySearch.value = els.factorySelect.value;
+      render();
+    });
+    els.factorySearch.addEventListener('input', function() {
+      els.factorySelect.value = '';
+      render();
+    });
     els.exportBtn.addEventListener('click', exportPDF);
 
     async function exportPDF() {
