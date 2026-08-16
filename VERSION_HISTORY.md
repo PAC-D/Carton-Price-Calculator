@@ -1,5 +1,11 @@
 # Version History
 
+## v2.2.0 (UI Polish & Welcome Collapse)
+*   **Smart Welcome Collapse**: The welcome hero now smoothly collapses to a compact title-only header once a Packaging Supplier is selected, keeping the "Carton Price Calculator" heading visible while hiding the icon, tagline, steps, and CTA with a fluid CSS animation. The panel expands back seamlessly when the supplier is cleared.
+*   **Calculator Refinements**: Removed the per-factory rate column from the factory table (rates remain the active pricing source); placed the Carton Quantity input beside the Carton Size on desktop and as a full-width row on mobile; stacked the Supplier Cost / Primark Price dashboard panels vertically on small screens.
+*   **Pricing Data Check PDF Export**: Branded export now renders both the PACD and Primark logos in a header bar on every page, with a "Carton Price for Factory" heading on the first page.
+*   **Pricing Data Check UI**: Navbar now shows the Primark logo alongside the page title; footer links back to the main Carton Price Calculator; the results card is vertically centered on fullscreen layouts; cache-busting query strings added to local assets.
+
 ## v2.1.0 (Pricing Data Check Subpage)
 *   **Pricing Data Check Subpage**: Added a PACD-themed subpage for packaging rate look-up by factory and packaging supplier, with supplier/factory filters and branded PDF export. Data maintained independently in `primark-pricing-data-check/data.csv`.
 

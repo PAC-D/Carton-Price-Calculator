@@ -8,6 +8,7 @@ A specialized web application designed for calculating corrugated carton prices,
 *   **Dual-View Dashboard**: Automatically calculates both Supplier Cost and standard Primark Price based on input dimensions and generates a comparative Margin breakdown.
 *   **Detailed Paper Consumption**: Generates high-accuracy paper resource metrics (Board Length, Stitching, Fluting Space, Roll Increment/Width) based on supplier-specific dividing logic per carton.
 *   **Branded PDF Quotation System**: Exports a professionally styled A4 pricing quota document matching the PACD aesthetic via an advanced offscreen rendering method.
+*   **Smart Welcome Collapse**: The welcome hero smoothly collapses to a compact title-only header once a Packaging Supplier is selected, keeping the app heading visible at all times.
 *   **Real-time Interaction**: All user inputs (dimensions, preset FEFCO 0201 options, carton quantity) update dashboard numbers dynamically without needing manual submission.
 
 ## 🛠️ Usage
@@ -20,7 +21,7 @@ A specialized web application designed for calculating corrugated carton prices,
 
 ## 🔗 Sub-pages
 
-*   **Pricing Data Check** (`primark-pricing-data-check/`): Standalone look-up of packaging rates (US $ per SQM) by factory and supplier, with filter and PDF export. Rate data is maintained separately in `primark-pricing-data-check/data.csv`.
+*   **Pricing Data Check** (`primark-pricing-data-check/`): Standalone look-up of packaging rates (US $ per SQM) by factory and supplier, with filter and branded PDF export featuring both PACD and Primark logos. Rate data is maintained separately in `primark-pricing-data-check/data.csv`.
 
 ## 🏗️ Technical Architecture
 
