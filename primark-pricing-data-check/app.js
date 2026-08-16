@@ -119,7 +119,9 @@ if (typeof document !== 'undefined') {
 
       const doc = new window.jspdf.jsPDF();
       doc.setFontSize(16);
+      doc.setTextColor(0, 32, 91);
       doc.text('Primark Pricing Data Check', 14, 16);
+      doc.setTextColor(0, 0, 0);
       doc.setFontSize(10);
       doc.text('Exported: ' + new Date().toLocaleString(), 14, 23);
       const supplierLabel = els.supplierFilter.value;
@@ -130,7 +132,7 @@ if (typeof document !== 'undefined') {
         head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)']],
         body: body,
         styles: { fontSize: 9, cellPadding: 2 },
-        headStyles: { fillColor: [31, 96, 196] },
+        headStyles: { fillColor: [0, 32, 91] },
         columnStyles: {
           0: { cellWidth: 12 },
           3: { halign: 'right', cellWidth: 30 }
@@ -138,6 +140,9 @@ if (typeof document !== 'undefined') {
         didDrawPage: function () {
           const page = doc.internal.getCurrentPageInfo().pageNumber;
           doc.setFontSize(8);
+          doc.setTextColor(100, 116, 139);
+          doc.text('PACD © 2026', 14, 290);
+          doc.setTextColor(0, 0, 0);
           doc.text('Page ' + page, 198, 290, { align: 'right' });
         }
       });
