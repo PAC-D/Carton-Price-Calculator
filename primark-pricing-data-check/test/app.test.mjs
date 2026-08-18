@@ -61,8 +61,8 @@ test('formatPrice formats to two decimals', () => {
 test('parseCSV parses a quoted factory field containing a comma', () => {
   const rows = parseCSV([
     'Packaging Supplier,Factory,Price SQM (US $)',
-    'PS- UNION LABEL & ACCESSORIES LTD.,"L,ESQUIRE LTD.",0.68'
+    'UNION LABEL & ACCESSORIES LTD.,"L,ESQUIRE LTD.",0.68'
   ].join('\n'));
   assert.equal(rows.length, 1);
-  assert.deepEqual(rows[0], { supplier: 'PS- UNION LABEL & ACCESSORIES LTD.', factory: 'L,ESQUIRE LTD.', price: 0.68 });
+  assert.deepEqual(rows[0], { supplier: 'UNION LABEL & ACCESSORIES LTD.', factory: 'L,ESQUIRE LTD.', price: 0.68 });
 });

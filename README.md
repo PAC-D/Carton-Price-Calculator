@@ -4,7 +4,7 @@ A specialized web application designed for calculating corrugated carton prices,
 
 ## 🚀 Key Features
 
-*   **Supplier Directory & Rate Execution**: Instantly look up Garment Factories matched to their respective Packaging Suppliers (Epyllion, M&U, Uniglory, PS- UNION LABEL & ACCESSORIES LTD.).
+*   **Supplier Directory & Rate Execution**: Instantly look up Garment Factories matched to their respective Packaging Suppliers (Epyllion, M&U, Uniglory, UNION LABEL & ACCESSORIES LTD.).
 *   **Dual-View Dashboard**: Automatically calculates both the Packaging Supplier Price and the standard Primark Carton Price based on input dimensions and generates a comparative Margin breakdown.
 *   **Detailed Paper Consumption**: Generates high-accuracy paper resource metrics (Board Length, Stitching, Fluting Space, Roll Increment/Width) based on supplier-specific dividing logic per carton.
 *   **Branded PDF Quotation System**: Exports a professionally styled A4 pricing quota document matching the PACD aesthetic via an advanced offscreen rendering method.

@@ -149,7 +149,7 @@ const SUPPLIERS = {
     ]
   },
   ps_union: {
-    name: "PS- UNION LABEL & ACCESSORIES LTD.",
+    name: "UNION LABEL & ACCESSORIES LTD.",
     formulaId: "union",
     factories: [
       { name: "WINTER DRESS LTD.", rate: FACTORY_SQM_RATE },

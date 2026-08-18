@@ -1,8 +1,8 @@
-# PS- UNION Supplier Addition - Design Specification
+# UNION LABEL & ACCESSORIES Supplier Addition - Design Specification
 
 ## Overview
 
-Add a fourth packaging supplier, "PS- UNION LABEL & ACCESSORIES LTD.", with 19 garment factories, to both the carton price calculator (`js/data.js` + `index.html`) and the pricing data check subpage (`primark-pricing-data-check/data.csv`). In the carton calculator the new factories price identically to all others (`FACTORY_SQM_RATE`); the data check shows each factory's actual listed per-SQM price.
+Add a fourth packaging supplier, "UNION LABEL & ACCESSORIES LTD.", with 19 garment factories, to both the carton price calculator (`js/data.js` + `index.html`) and the pricing data check subpage (`primark-pricing-data-check/data.csv`). In the carton calculator the new factories price identically to all others (`FACTORY_SQM_RATE`); the data check shows each factory's actual listed per-SQM price.
 
 ## Scope
 
@@ -10,7 +10,7 @@ Add a fourth packaging supplier, "PS- UNION LABEL & ACCESSORIES LTD.", with 19 g
 
 - `js/data.js`: new `ps_union` supplier entry with 19 factories at `rate: FACTORY_SQM_RATE`, `formulaId: "union"`
 - `js/calculator.js`: `case 'union'` aliased to the Union/Epyllion formula via switch fall-through with `case 'epyllion'`
-- `index.html`: packaging-supplier dropdown option for PS- UNION; welcome step-1 text updated
+- `index.html`: packaging-supplier dropdown option for UNION LABEL & ACCESSORIES; welcome step-1 text updated
 - `primark-pricing-data-check/data.csv`: 19 appended rows with the listed prices; the factory name `L,ESQUIRE LTD.` is written as a quoted CSV field
 - `primark-pricing-data-check/app.js`: `parseCSV` upgraded to a quote-aware field splitter so quoted fields containing commas parse correctly (existing simple rows parse identically)
 - Tests: `tests/data.test.js`, `tests/calculator.test.js`, `primark-pricing-data-check/test/app.test.mjs`
@@ -30,7 +30,7 @@ New entry in `SUPPLIERS` (after `uniglory`):
 
 ```text
 key:       ps_union
-name:      "PS- UNION LABEL & ACCESSORIES LTD."
+name:      "UNION LABEL & ACCESSORIES LTD."
 formulaId: "union"
 factories: 19 entries, each { name: <verbatim name>, rate: FACTORY_SQM_RATE }
 ```
@@ -59,7 +59,7 @@ Factory names verbatim (including `AXIS KNIT WAER LTD.`, `L,ESQUIRE LTD.`, `MODE
 
 ### Data check (`primark-pricing-data-check/data.csv`)
 
-19 appended rows, supplier field `PS- UNION LABEL & ACCESSORIES LTD.`, with the listed per-SQM prices:
+19 appended rows, supplier field `UNION LABEL & ACCESSORIES LTD.`, with the listed per-SQM prices:
 
 | Factory | Price |
 |---|---|
@@ -84,7 +84,7 @@ Factory names verbatim (including `AXIS KNIT WAER LTD.`, `L,ESQUIRE LTD.`, `MODE
 | APS APPARELS LTD. | 0.68 |
 
 The row for `L,ESQUIRE LTD.` is written with the factory field quoted:
-`PS- UNION LABEL & ACCESSORIES LTD.,"L,ESQUIRE LTD.",0.68`
+`UNION LABEL & ACCESSORIES LTD.,"L,ESQUIRE LTD.",0.68`
 
 ## Formula Mapping
 
@@ -107,8 +107,8 @@ One formula implementation, two formulaIds. This is the "Union/Epyllion formula"
 
 ## UI Changes (`index.html`)
 
-- `#packaging-supplier` dropdown gains: `<option value="ps_union">PS- UNION LABEL &amp; ACCESSORIES LTD.</option>` (after Uniglory)
-- Welcome step 1 text: "Epyllion, M&amp;U, or Uniglory" -> "Epyllion, M&amp;U, Uniglory, or PS- UNION"
+- `#packaging-supplier` dropdown gains: `<option value="ps_union">UNION LABEL &amp; ACCESSORIES LTD.</option>` (after Uniglory)
+- Welcome step 1 text: "Epyllion, M&amp;U, or Uniglory" -> "Epyllion, M&amp;U, Uniglory, or UNION LABEL &amp; ACCESSORIES LTD."
 
 ## Architecture
 
@@ -119,7 +119,7 @@ One formula implementation, two formulaIds. This is the "Union/Epyllion formula"
 
 ## Testing
 
-- `tests/data.test.js`: assert `SUPPLIERS.ps_union.formulaId === 'union'` and `SUPPLIERS.ps_union.name === 'PS- UNION LABEL & ACCESSORIES LTD.'`; the existing uniform-rate test iterates all suppliers automatically and covers the 19 new factories
+- `tests/data.test.js`: assert `SUPPLIERS.ps_union.formulaId === 'union'` and `SUPPLIERS.ps_union.name === 'UNION LABEL & ACCESSORIES LTD.'`; the existing uniform-rate test iterates all suppliers automatically and covers the 19 new factories
 - `tests/calculator.test.js`: `calcSupplierSQM('union', 10, 10, 10) === 0.0096` (same as epyllion)
 - `primark-pricing-data-check/test/app.test.mjs`: `parseCSV` parses a quoted field containing a comma into the correct three columns; existing tests unchanged and passing
-- Browser check: PS- UNION selectable in the calculator, factory list filters, rate displays `$0.73`; data-check page lists PS- UNION rows with the listed prices, including the `L,ESQUIRE LTD.` row
+- Browser check: UNION LABEL & ACCESSORIES selectable in the calculator, factory list filters, rate displays `$0.73`; data-check page lists UNION LABEL & ACCESSORIES rows with the listed prices, including the `L,ESQUIRE LTD.` row

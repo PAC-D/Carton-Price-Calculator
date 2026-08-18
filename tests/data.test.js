@@ -23,8 +23,8 @@ QUnit.test('All factories use FACTORY_SQM_RATE (primark minus 5%)', function(ass
   });
 });
 
-QUnit.test('PS-UNION supplier is mapped to the union formula', function(assert) {
-  assert.equal(SUPPLIERS.ps_union.name, 'PS- UNION LABEL & ACCESSORIES LTD.');
+QUnit.test('UNION LABEL & ACCESSORIES supplier is mapped to the union formula', function(assert) {
+  assert.equal(SUPPLIERS.ps_union.name, 'UNION LABEL & ACCESSORIES LTD.');
   assert.equal(SUPPLIERS.ps_union.formulaId, 'union');
   assert.equal(SUPPLIERS.ps_union.factories.length, 19);
 });
