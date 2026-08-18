@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { parseCSV, getSuppliers, getFactories, applyFilters, formatPrice } = require('../app.js');
+const { parseCSV, getSuppliers, getFactories, applyFilters, formatPrice, sortRows } = require('../app.js');
 
 const SAMPLE = [
   'Packaging Supplier,Factory,Price SQM (US $)',
@@ -65,4 +65,19 @@ test('parseCSV parses a quoted factory field containing a comma', () => {
   ].join('\n'));
   assert.equal(rows.length, 1);
   assert.deepEqual(rows[0], { supplier: 'UNION LABEL & ACCESSORIES LTD.', factory: 'L,ESQUIRE LTD.', price: 0.68 });
+});
+
+test('sortRows sorts by supplier then factory', () => {
+  const rows = [
+    { supplier: 'Uniglory Paper & Packaging', factory: 'Zebra Ltd', price: 1 },
+    { supplier: 'M&U Packaging Ltd', factory: 'Alpha Ltd', price: 1 },
+    { supplier: 'Epyllion Limited', factory: 'Beta Ltd', price: 1 },
+    { supplier: 'Epyllion Limited', factory: 'Alpha Ltd', price: 1 }
+  ];
+  assert.deepEqual(sortRows(rows).map(r => r.supplier + '|' + r.factory), [
+    'Epyllion Limited|Alpha Ltd',
+    'Epyllion Limited|Beta Ltd',
+    'M&U Packaging Ltd|Alpha Ltd',
+    'Uniglory Paper & Packaging|Zebra Ltd'
+  ]);
 });

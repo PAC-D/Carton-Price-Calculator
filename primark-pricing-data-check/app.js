@@ -55,8 +55,13 @@ function formatPrice(price) {
   return price.toFixed(2);
 }
 
+function sortRows(rows) {
+  return [...rows].sort((a, b) =>
+    a.supplier.localeCompare(b.supplier) || a.factory.localeCompare(b.factory));
+}
+
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { parseCSV, getSuppliers, getFactories, applyFilters, formatPrice };
+  module.exports = { parseCSV, getSuppliers, getFactories, applyFilters, formatPrice, sortRows };
 }
 
 if (typeof document !== 'undefined') {
@@ -102,10 +107,10 @@ if (typeof document !== 'undefined') {
     }
 
     function render() {
-      const filtered = applyFilters(state.rows, {
+      const filtered = sortRows(applyFilters(state.rows, {
         supplier: els.supplierFilter.value,
         factoryText: els.factorySearch.value
-      });
+      }));
       els.rowCount.textContent = `Showing ${filtered.length} of ${state.rows.length} rows`;
       if (filtered.length === 0) {
         els.tbody.innerHTML = '<tr><td colspan="4">No rows match the current filters.</td></tr>';
@@ -140,8 +145,7 @@ if (typeof document !== 'undefined') {
         alert('Nothing to export — the current filters match no rows.');
         return;
       }
-      const sorted = [...filtered].sort((a, b) =>
-        a.supplier.localeCompare(b.supplier) || a.factory.localeCompare(b.factory));
+      const sorted = sortRows(filtered);
       const body = sorted.map((row, i) =>
         [i + 1, row.supplier, row.factory, formatPrice(row.price)]);
 
