@@ -7,16 +7,16 @@ const { parseCSV, getSuppliers, getFactories, applyFilters, formatPrice } = requ
 
 const SAMPLE = [
   'Packaging Supplier,Factory,Price SQM (US $)',
-  'Epyllion,Fakir Knitwears Ltd.,0.7',
-  'M&U,Akh Eco Apparels Ltd,0.96',
-  'Uniglory,AB APPARELS LTD,0.78'
+  'Epyllion Limited,Fakir Knitwears Ltd.,0.7',
+  'M&U Packaging Ltd,Akh Eco Apparels Ltd,0.96',
+  'Uniglory Paper & Packaging,AB APPARELS LTD,0.78'
 ].join('\n');
 
 test('parseCSV parses header and rows', () => {
   const rows = parseCSV(SAMPLE);
   assert.equal(rows.length, 3);
-  assert.deepEqual(rows[0], { supplier: 'Epyllion', factory: 'Fakir Knitwears Ltd.', price: 0.7 });
-  assert.deepEqual(rows[2], { supplier: 'Uniglory', factory: 'AB APPARELS LTD', price: 0.78 });
+  assert.deepEqual(rows[0], { supplier: 'Epyllion Limited', factory: 'Fakir Knitwears Ltd.', price: 0.7 });
+  assert.deepEqual(rows[2], { supplier: 'Uniglory Paper & Packaging', factory: 'AB APPARELS LTD', price: 0.78 });
 });
 
 test('parseCSV skips the header line and blank lines', () => {
@@ -25,7 +25,7 @@ test('parseCSV skips the header line and blank lines', () => {
 });
 
 test('getSuppliers returns All plus distinct suppliers in order', () => {
-  assert.deepEqual(getSuppliers(parseCSV(SAMPLE)), ['All', 'Epyllion', 'M&U', 'Uniglory']);
+  assert.deepEqual(getSuppliers(parseCSV(SAMPLE)), ['All', 'Epyllion Limited', 'M&U Packaging Ltd', 'Uniglory Paper & Packaging']);
 });
 
 test('getFactories returns distinct factories sorted', () => {
@@ -33,7 +33,7 @@ test('getFactories returns distinct factories sorted', () => {
 });
 
 test('applyFilters filters by supplier', () => {
-  const out = applyFilters(parseCSV(SAMPLE), { supplier: 'M&U', factoryText: '' });
+  const out = applyFilters(parseCSV(SAMPLE), { supplier: 'M&U Packaging Ltd', factoryText: '' });
   assert.equal(out.length, 1);
   assert.equal(out[0].factory, 'Akh Eco Apparels Ltd');
 });
@@ -44,7 +44,7 @@ test('applyFilters filters by factory text case-insensitively', () => {
 });
 
 test('applyFilters combines supplier and factory text', () => {
-  const out = applyFilters(parseCSV(SAMPLE), { supplier: 'Uniglory', factoryText: 'app' });
+  const out = applyFilters(parseCSV(SAMPLE), { supplier: 'Uniglory Paper & Packaging', factoryText: 'app' });
   assert.equal(out.length, 1);
   assert.equal(out[0].factory, 'AB APPARELS LTD');
 });
