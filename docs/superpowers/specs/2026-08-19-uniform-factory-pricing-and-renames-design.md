@@ -87,7 +87,7 @@ The `#paper-section` block moves above the "Cost Breakdown" heading and `#costs-
 
 ## Validation And Error Handling
 
-No new validation. Existing guards (positive dimensions, quantity, selected supplier/factory) are unaffected. The margin styling (positive/negative) continues to apply; with uniform pricing margins are now always positive (5% of Primark total).
+No new validation. Existing guards (positive dimensions, quantity, selected supplier/factory) are unaffected. The margin styling (positive/negative) continues to apply; margins vary by supplier formula and dimensions and may be slightly positive or negative.
 
 ## Testing
 

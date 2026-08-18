@@ -1,7 +1,7 @@
 # Version History
 
 ## v2.3.0 (Uniform Factory Pricing & Label Clarity)
-*   **Uniform Factory Pricing**: All garment-factory rates now equal the Primark SQM rate minus 5% (`$0.77` x 0.95 = `$0.7315`), defined once as `PRIMARK_SQM_RATE` / `FACTORY_SQM_RATE` constants in `js/data.js`. Every factory of a supplier prices identically, keeping the supplier side 5% below the Primark benchmark.
+*   **Uniform Factory Pricing**: All garment-factory rates now equal the Primark SQM rate minus 5% (`$0.77` x 0.95 = `$0.7315`), defined once as `PRIMARK_SQM_RATE` / `FACTORY_SQM_RATE` constants in `js/data.js`. Every factory of a supplier prices identically, keeping the supplier side 5% below the Primark benchmark per SQM.
 *   **Clearer Result Labels**: Renamed "Supplier Cost" to "Packaging Supplier Price" and "Primark Price" to "Primark Carton Price" across the calculator and the PDF quotation.
 *   **Paper Consumption Placement**: Moved the Paper Consumption card above the price panels on the calculator and above the Cost Breakdown section in the PDF quotation.
 
