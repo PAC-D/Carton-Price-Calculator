@@ -1,5 +1,9 @@
 # Version History
 
+## v2.4.0 (PS- UNION Supplier)
+*   **New Packaging Supplier**: Added PS- UNION LABEL & ACCESSORIES LTD. with 19 garment factories to the carton price calculator, priced at the standard factory rate (Primark SQM minus 5%) and mapped to the Union/Epyllion SQM formula.
+*   **Pricing Data Check**: Added the same 19 factories to the pricing data check with their listed per-SQM rates, including a quoted-field CSV fix so factory names containing commas (e.g. `L,ESQUIRE LTD.`) parse correctly.
+
 ## v2.3.0 (Uniform Factory Pricing & Label Clarity)
 *   **Uniform Factory Pricing**: All garment-factory rates now equal the Primark SQM rate minus 5% (`$0.77` x 0.95 = `$0.7315`), defined once as `PRIMARK_SQM_RATE` / `FACTORY_SQM_RATE` constants in `js/data.js`. Every factory of a supplier prices identically, keeping the supplier side 5% below the Primark benchmark per SQM.
 *   **Clearer Result Labels**: Renamed "Supplier Cost" to "Packaging Supplier Price" and "Primark Price" to "Primark Carton Price" across the calculator and the PDF quotation.
