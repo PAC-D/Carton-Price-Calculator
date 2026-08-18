@@ -1,5 +1,9 @@
 # Version History
 
+## v2.4.1 (Official Factory Name Updates)
+*   **Official Factory Names**: Updated 129 factory names (133 entries) across the carton price calculator and pricing data check to their official directory names with factory IDs. 10 factories keep their previous names (no exact match in the directory or no mapping row).
+*   **Pending Confirmations**: Comfit Composite Knit Ltd PKA Comfit Lingerie Limited (ID not yet confirmed) and Far East Knitting & Dyeing Industries Ltd PJT (11583) (ID guessed) are best-guess renames from a truncated source list.
+
 ## v2.4.0 (UNION LABEL & ACCESSORIES Supplier)
 *   **New Packaging Supplier**: Added UNION LABEL & ACCESSORIES LTD. with 19 garment factories to the carton price calculator, priced at the standard factory rate (Primark SQM minus 5%) and mapped to the Union/Epyllion SQM formula.
 *   **Pricing Data Check**: Added the same 19 factories to the pricing data check with their listed per-SQM rates, including a quoted-field CSV fix so factory names containing commas (e.g. `L,ESQUIRE LTD.`) parse correctly.
