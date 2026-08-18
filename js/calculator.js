@@ -20,7 +20,7 @@ function calculatePrice(formulaId, l, w, h, qty, factoryRate) {
   if (!l || !w || !h || !qty || l <= 0 || w <= 0 || h <= 0 || qty <= 0) return null;
 
   const primarkSqm = calcPrimarkSQM(l, w, h);
-  const primarkPricePerCarton = primarkSqm * 0.77;
+  const primarkPricePerCarton = primarkSqm * PRIMARK_SQM_RATE;
   const primarkTotalPrice = primarkPricePerCarton * qty;
 
   const supplierSqm = calcSupplierSQM(formulaId, l, w, h);

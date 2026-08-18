@@ -17,10 +17,19 @@ QUnit.test('Supplier SQM logic', function(assert) {
 
 QUnit.test('calculatePrice full payload', function(assert) {
   // Mock partial response structure for integration points
-  const res = calculatePrice('epyllion', 10, 10, 10, 1, 0.70);
+  const res = calculatePrice('epyllion', 10, 10, 10, 1, FACTORY_SQM_RATE);
   assert.ok(res.primarkSqm);
   assert.ok(res.supplierSqm);
   assert.ok(res.margin);
+});
+
+QUnit.test('calculatePrice uses PRIMARK_SQM_RATE and FACTORY_SQM_RATE', function(assert) {
+  const res = calculatePrice('epyllion', 10, 10, 10, 2, FACTORY_SQM_RATE);
+  assert.equal(res.primarkPricePerCarton, res.primarkSqm * PRIMARK_SQM_RATE);
+  assert.equal(res.supplierCostPerCarton, res.supplierSqm * FACTORY_SQM_RATE);
+  assert.equal(res.supplierTotalCost, res.supplierCostPerCarton * 2);
+  assert.equal(res.primarkTotalPrice, res.primarkPricePerCarton * 2);
+  assert.equal(res.margin, res.primarkTotalPrice - res.supplierTotalCost);
 });
 
 QUnit.module('Paper Consumption');
