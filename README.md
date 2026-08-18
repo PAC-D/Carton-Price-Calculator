@@ -5,7 +5,7 @@ A specialized web application designed for calculating corrugated carton prices,
 ## 🚀 Key Features
 
 *   **Supplier Directory & Rate Execution**: Instantly look up Garment Factories matched to their respective Packaging Suppliers (Epyllion, M&U, Uniglory).
-*   **Dual-View Dashboard**: Automatically calculates both Supplier Cost and standard Primark Price based on input dimensions and generates a comparative Margin breakdown.
+*   **Dual-View Dashboard**: Automatically calculates both the Packaging Supplier Price and the standard Primark Carton Price based on input dimensions and generates a comparative Margin breakdown.
 *   **Detailed Paper Consumption**: Generates high-accuracy paper resource metrics (Board Length, Stitching, Fluting Space, Roll Increment/Width) based on supplier-specific dividing logic per carton.
 *   **Branded PDF Quotation System**: Exports a professionally styled A4 pricing quota document matching the PACD aesthetic via an advanced offscreen rendering method.
 *   **Smart Welcome Collapse**: The welcome hero smoothly collapses to a compact title-only header once a Packaging Supplier is selected, keeping the app heading visible at all times.
@@ -15,8 +15,8 @@ A specialized web application designed for calculating corrugated carton prices,
 
 1.  **Configure Packaging Details**: Select the Packaging Supplier Name from the dropdown, then select a dedicated Garment Factory.
 2.  **Input Dimensions**: Use the `Carton Size` preset dropdown, or select `Custom Dimensions` and type your direct Length, Width, and Height configurations in millimeters. 
-3.  **Review Dashboard Data**: Review the generated dashboard panels measuring Supplier Costs, Primark Price constraints, and the computed Margin difference.
-4.  **Paper Consumption View**: Analyze required stitching lengths, divided sheet boards, and overall SQM carton footprints.
+3.  **Review Dashboard Data**: Review the generated dashboard panels measuring the Packaging Supplier Price, Primark Carton Price constraints, and the computed Margin difference.
+4.  **Paper Consumption View**: Review paper resource metrics (shown above the price panels) covering stitching lengths, divided sheet boards, and overall SQM carton footprints.
 5.  *(Hidden Module / Optional)* **Generate PDF**: Upon unlocking configuration bounds, a `pdf_export.html` bridge exports data directly to a physical quote formatting page.
 
 ## 🔗 Sub-pages
