@@ -146,10 +146,31 @@
 
           <div id="calc-instruction" class="calc-instruction">Select a supplier and factory, then enter dimensions and quantity to see the calculation.</div>
 
+          <!-- Paper Consumption -->
+          <section id="paper-consumption-card" class="paper-consumption-card" style="display: none;">
+            <h3>Paper Consumption</h3>
+            <p class="paper-subtitle">Per carton</p>
+            <div class="paper-details-grid">
+              <div class="paper-detail"><span>Board Length</span><strong id="paper-board-length"></strong></div>
+              <div class="paper-detail"><span>Stitching</span><strong id="paper-stitching"></strong></div>
+              <div class="paper-detail"><span>Actual Length</span><strong id="paper-actual-length"></strong></div>
+              <div class="paper-detail"><span>Fluting Space</span><strong id="paper-fluting-space"></strong></div>
+              <div class="paper-detail"><span>Width</span><strong id="paper-width"></strong></div>
+              <div class="paper-detail"><span>Divide</span><strong id="paper-divide"></strong></div>
+              <div class="paper-detail"><span>Cutting Space</span><strong id="paper-cutting-space"></strong></div>
+              <div class="paper-detail"><span>Board Width</span><strong id="paper-board-width"></strong></div>
+              <div class="paper-detail"><span>Paper Roll Width</span><strong id="paper-roll-width"></strong></div>
+            </div>
+            <div class="paper-consumption-total">
+              <span>Paper Consumption</span>
+              <strong id="paper-consumption-sqm"></strong>
+            </div>
+          </section>
+
           <div id="calc-results" class="results">
             <div class="result-pair">
               <div class="result-item" style="background: #f8fafc; border-color: #e2e8f0; display: block; border: 1px solid #e2e8f0;">
-                <h4 style="margin-bottom: 12px; color: #1e293b; font-size: 16px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;">Supplier Cost</h4>
+                <h4 style="margin-bottom: 12px; color: #1e293b; font-size: 16px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;">Packaging Supplier Price</h4>
                 <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
                   <span class="result-label">SQM / Carton</span>
                   <strong class="result-value" id="res-supp-sqm" style="font-size: 14px;"></strong>
@@ -165,7 +186,7 @@
               </div>
 
               <div class="result-item" style="background: #f0fdf4; border-color: #bbf7d0; display: block; border: 1px solid #bbf7d0;">
-                <h4 style="margin-bottom: 12px; color: #1e293b; font-size: 16px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;">Primark Price</h4>
+                <h4 style="margin-bottom: 12px; color: #1e293b; font-size: 16px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;">Primark Carton Price</h4>
                 <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
                   <span class="result-label">SQM / Carton</span>
                   <strong class="result-value" id="res-prim-sqm" style="font-size: 14px;"></strong>
@@ -187,27 +208,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Paper Consumption -->
-        <section id="paper-consumption-card" class="paper-consumption-card" style="display: none;">
-          <h3>Paper Consumption</h3>
-          <p class="paper-subtitle">Per carton</p>
-          <div class="paper-details-grid">
-            <div class="paper-detail"><span>Board Length</span><strong id="paper-board-length"></strong></div>
-            <div class="paper-detail"><span>Stitching</span><strong id="paper-stitching"></strong></div>
-            <div class="paper-detail"><span>Actual Length</span><strong id="paper-actual-length"></strong></div>
-            <div class="paper-detail"><span>Fluting Space</span><strong id="paper-fluting-space"></strong></div>
-            <div class="paper-detail"><span>Width</span><strong id="paper-width"></strong></div>
-            <div class="paper-detail"><span>Divide</span><strong id="paper-divide"></strong></div>
-            <div class="paper-detail"><span>Cutting Space</span><strong id="paper-cutting-space"></strong></div>
-            <div class="paper-detail"><span>Board Width</span><strong id="paper-board-width"></strong></div>
-            <div class="paper-detail"><span>Paper Roll Width</span><strong id="paper-roll-width"></strong></div>
-          </div>
-          <div class="paper-consumption-total">
-            <span>Paper Consumption</span>
-            <strong id="paper-consumption-sqm"></strong>
-          </div>
-        </section>
 
         <button id="export-pdf-btn" class="primary-btn" disabled style="display: none;">
           <i data-lucide="download"></i> Export PDF
