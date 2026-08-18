@@ -14,7 +14,7 @@
 - Mapping applied verbatim including parenthetical factory IDs (e.g. `AB Apparels Ltd (24718)`).
 - 14 name strings are KEPT unchanged (8 no-exact-match rows = 12 name strings + `Entrust Fashions Ltd.` + `HELICON LIMITED`).
 - Matching is EXACT full-string only (no substring matching).
-- Two best-guess renames are flagged for later user confirmation: Comfit -> `Comfit Composite Knit Ltd PKA Comfit Lingerie Limited` (no ID), Far East -> `Far East Knitting & Dyeing Industries Ltd PJT (11583)` (ID guessed).
+- Two best-guess renames were flagged for user confirmation: Comfit -> `Comfit Composite Knit Ltd PKA Comfit Lingerie Limited` (no ID, still pending) and Far East -> `Far East Knitting & Dyeing Industries Ltd PJT (115)` (ID since confirmed by user).
 - Expected counts after rename: 147 factory entries in each file; 133 renamed entries, 14 kept entries per file.
 - QUnit (`tests/runner.html`): 14 tests, 181/184 assertions, ONLY the 2 pre-existing failures (CARTON_PRESETS window access; Primark SQM float `0.09720000000000001`).
 - Data-check tests: `node --test primark-pricing-data-check/test/app.test.mjs` — 10/10 pass.
@@ -75,7 +75,7 @@ const MAPPING = [
   { aliases: ['Fakir Apparels'], target: 'Fakir Apparels Ltd PJT (11266)' },
   { aliases: ['Fakir Knitwears Ltd.'], target: 'Fakir Knitwears Ltd PJT (14100)' },
   { aliases: ['Fame Apparels Limited'], target: 'Fame Apparels Ltd (25042)' },
-  { aliases: ['Far East Knitting'], target: 'Far East Knitting & Dyeing Industries Ltd PJT (11583)' },
+  { aliases: ['Far East Knitting'], target: 'Far East Knitting & Dyeing Industries Ltd PJT (115)' },
   { aliases: ['Fortis Garments Limited', 'Fortis Garments Ltd'], target: 'Fortis Garments Limited (25218)' },
   { aliases: ['Glory Fashion Wear Ltd.'], target: 'Glory Fashion Wear Ltd (21750)' },
   { aliases: ['GM Apparels Limited'], target: 'GM Apparels Ltd (25787)' },
@@ -388,7 +388,7 @@ Insert ABOVE the `## v2.4.0` line, matching the existing style exactly (blank li
 ```markdown
 ## v2.4.1 (Official Factory Name Updates)
 *   **Official Factory Names**: Updated 129 factory names (133 entries) across the carton price calculator and pricing data check to their official directory names with factory IDs. 10 factories keep their previous names (no exact match in the directory or no mapping row).
-*   **Pending Confirmations**: Comfit Composite Knit Ltd PKA Comfit Lingerie Limited (ID not yet confirmed) and Far East Knitting & Dyeing Industries Ltd PJT (11583) (ID guessed) are best-guess renames from a truncated source list.
+*   **Pending Confirmation**: Comfit Composite Knit Ltd PKA Comfit Lingerie Limited (ID not yet confirmed) is a best-guess rename from a truncated source list.
 ```
 
 - [ ] **Step 3: Verify**

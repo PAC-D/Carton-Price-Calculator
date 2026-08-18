@@ -94,7 +94,7 @@ const SUPPLIERS = {
       { name: "AB Apparels Ltd (24718)", rate: FACTORY_SQM_RATE },
       { name: "Crown Exclusive Wears Ltd (24272)", rate: FACTORY_SQM_RATE },
       { name: "Faiza Industries Ltd (24407)", rate: FACTORY_SQM_RATE },
-      { name: "Far East Knitting & Dyeing Industries Ltd PJT (11583)", rate: FACTORY_SQM_RATE },
+      { name: "Far East Knitting & Dyeing Industries Ltd PJT (115)", rate: FACTORY_SQM_RATE },
       { name: "Golden Refit Garments Ltd (23489)", rate: FACTORY_SQM_RATE },
       { name: "Ibrahim Knit Garments Pvt Ltd PJT (12048)", rate: FACTORY_SQM_RATE },
       { name: "Libas Textiles Ltd (13809)", rate: FACTORY_SQM_RATE },

@@ -46,7 +46,7 @@ Aliases are the names as they appear in the system today (multiple aliases = the
 | Fakir Apparels | Fakir Apparels Ltd PJT (11266) |
 | Fakir Knitwears Ltd. | Fakir Knitwears Ltd PJT (14100) |
 | Fame Apparels Limited | Fame Apparels Ltd (25042) |
-| Far East Knitting | Far East Knitting & Dyeing Industries Ltd PJT (11583) [FLAG: ID guessed — confirm] |
+| Far East Knitting | Far East Knitting & Dyeing Industries Ltd PJT (115) |
 | Fortis Garments Limited / Fortis Garments Ltd | Fortis Garments Limited (25218) |
 | Glory Fashion Wear Ltd. | Glory Fashion Wear Ltd (21750) |
 | GM Apparels Limited | GM Apparels Ltd (25787) |
@@ -125,9 +125,9 @@ Aliases are the names as they appear in the system today (multiple aliases = the
    - Alias `"L,ESQUIRE LTD."` (surrounding double quotes are CSV escaping) is matched as `L,ESQUIRE LTD.`.
    - MOUCHAK row covers both `MOUCHAK KNIT COMPOSITE LTD` and `MOUCHAK KNIT COMPOSITE LTD.` (trailing period).
    - The Lesquire row additionally covers the literal-backtick variant `L\`ESQUIRE LIMITED` exactly as it is stored in `data.csv` (line 8: `Epyllion,L`ESQUIRE LIMITED,0.68`) — the backtick is a data quirk of the CSV name, not an apostrophe; both the backtick and apostrophe variants rename to `Lesquire Limited (26569)`.
-3. **Comfit / Far East best guesses** are applied as flagged above; user confirmed "use best guess", to be confirmed later:
-   - Comfit -> `Comfit Composite Knit Ltd PKA Comfit Lingerie Limited` (no ID — paste was truncated before the ID)
-   - Far East -> `Far East Knitting & Dyeing Industries Ltd PJT (11583)` (ID guessed, same pattern as other PJT rows)
+3. **Comfit / Far East best guesses** were applied as flagged; Far East's ID was later confirmed by the user as `(115)`:
+   - Comfit -> `Comfit Composite Knit Ltd PKA Comfit Lingerie Limited` (no ID — paste was truncated before the ID; still pending confirmation)
+   - Far East -> `Far East Knitting & Dyeing Industries Ltd PJT (115)` (ID confirmed)
 4. **No-Exact-Match rows (8)** keep their current names: Goumati Knit Wears (+ variant), JIN HONG GARMENTS LTD., MG Knit Flair Ltd, NKM FASHION LTD., Shanta Industries Ltd, Target Fine Wear (+ variant), Urmi Garments (+ variant), Welldone Apparels (+ variant).
 5. **Factories with no mapping row at all** keep their current names: `Entrust Fashions Ltd.`, `HELICON LIMITED` (both uniglory).
 
