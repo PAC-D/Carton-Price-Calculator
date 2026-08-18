@@ -44,7 +44,7 @@ Every factory entry in `SUPPLIERS` gets `rate: FACTORY_SQM_RATE`, replacing the 
 ### Behavior
 
 - Displayed rate per SQM shows `$0.73` via `toFixed(2)` (unchanged formatting).
-- Margin calculation still uses the unrounded values, so every factory now produces a margin of exactly -5% of the Primark total (supplier total = primark total x 0.95, margin = primark total - supplier total = 5% of primark total).
+- Margin calculation still uses the unrounded values. Because each supplier has its own SQM formula (which differs from the Primark formula), the margin is not exactly 5% of the Primark total; it varies by supplier formula and dimensions and may be slightly positive or negative. All factories of the same supplier now produce identical results for the same dimensions.
 
 ## Label Renames
 
@@ -91,5 +91,5 @@ No new validation. Existing guards (positive dimensions, quantity, selected supp
 
 ## Testing
 
-- Update `tests/calculator.test.js`: factory rate fixtures now use 0.7315; verify `calculatePrice` uses `PRIMARK_SQM_RATE` and that margin equals primark total - supplier total with supplier total = primark total x 0.95.
+- Update `tests/calculator.test.js`: factory rate fixture uses 0.7315; verify `calculatePrice` produces `supplierCostPerCarton = supplierSqm * 0.7315` and `margin = primarkTotalPrice - supplierTotalCost`.
 - Browser check: rate displays `$0.73`, paper consumption appears above price cards, PDF shows renamed labels with Paper Consumption above Cost Breakdown.
