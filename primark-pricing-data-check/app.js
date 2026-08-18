@@ -1,8 +1,30 @@
+function splitCSVLine(line) {
+  const parts = [];
+  let cur = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuotes) {
+      if (ch === '"') inQuotes = false;
+      else cur += ch;
+    } else if (ch === '"') {
+      inQuotes = true;
+    } else if (ch === ',') {
+      parts.push(cur);
+      cur = '';
+    } else {
+      cur += ch;
+    }
+  }
+  parts.push(cur);
+  return parts;
+}
+
 function parseCSV(text) {
   const lines = text.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
   const rows = [];
   for (let i = 1; i < lines.length; i++) {
-    const parts = lines[i].split(',');
+    const parts = splitCSVLine(lines[i]);
     rows.push({
       supplier: parts[0].trim(),
       factory: parts[1].trim(),
