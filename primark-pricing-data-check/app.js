@@ -151,6 +151,7 @@ if (typeof document !== 'undefined') {
       const sorted = sortRows(filtered);
       const body = sorted.map((row, i) =>
         [i + 1, row.supplier, row.factory, formatPrice(row.price)]);
+      body.push(['', 'Primark SQM Price', '', formatPrice(PRIMARK_SQM_PRICE)]);
 
       const doc = new window.jspdf.jsPDF();
       const logos = await loadLogos();
@@ -175,12 +176,15 @@ if (typeof document !== 'undefined') {
       drawNavbar();
       doc.setFontSize(13);
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(227, 24, 55);
+      doc.setTextColor(0, 32, 91);
       doc.text('Carton Price for Factory', 14, 31);
+      doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('Generated on ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), 14, 36);
 
       doc.autoTable({
-        startY: 36,
+        startY: 40,
         margin: { top: 26 },
         head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)']],
         body: body,
@@ -189,6 +193,12 @@ if (typeof document !== 'undefined') {
         columnStyles: {
           0: { cellWidth: 12 },
           3: { halign: 'right', cellWidth: 30 }
+        },
+        rowStyles: function (row) {
+          if (row.index === body.length - 1) {
+            return { fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [0, 32, 91] };
+          }
+          return {};
         },
         willDrawPage: function (data) {
           if (data.pageNumber > 1) drawNavbar();
