@@ -121,9 +121,10 @@ Aliases are the names as they appear in the system today (multiple aliases = the
 
 1. **Exact string match** between each current factory name and the alias list (after the fixes below). A name matching no alias in any row is either kept (per rules 4-5) or reported to the user before commit.
 2. **Paste-artifact fixes** (applied to the mapping, not to the data files):
-   - Alias `L\`ESQUIRE LIMITED` (backtick) is matched as `L'ESQUIRE LIMITED` (apostrophe) — the actual name in both files.
+   - Alias `L\`ESQUIRE LIMITED` (backtick) is matched as `L'ESQUIRE LIMITED` (apostrophe) — the actual name in `js/data.js`.
    - Alias `"L,ESQUIRE LTD."` (surrounding double quotes are CSV escaping) is matched as `L,ESQUIRE LTD.`.
    - MOUCHAK row covers both `MOUCHAK KNIT COMPOSITE LTD` and `MOUCHAK KNIT COMPOSITE LTD.` (trailing period).
+   - The Lesquire row additionally covers the literal-backtick variant `L\`ESQUIRE LIMITED` exactly as it is stored in `data.csv` (line 8: `Epyllion,L`ESQUIRE LIMITED,0.68`) — the backtick is a data quirk of the CSV name, not an apostrophe; both the backtick and apostrophe variants rename to `Lesquire Limited (26569)`.
 3. **Comfit / Far East best guesses** are applied as flagged above; user confirmed "use best guess", to be confirmed later:
    - Comfit -> `Comfit Composite Knit Ltd PKA Comfit Lingerie Limited` (no ID — paste was truncated before the ID)
    - Far East -> `Far East Knitting & Dyeing Industries Ltd PJT (11583)` (ID guessed, same pattern as other PJT rows)

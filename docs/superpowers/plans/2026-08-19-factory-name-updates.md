@@ -89,7 +89,7 @@ const MAPPING = [
   { aliases: ['Intimate Attire Limited', 'Intimate Attire Ltd'], target: 'Intimate Attire Ltd PJT (23817)' },
   { aliases: ['Kaixi Fashion'], target: 'Kaixi Fashion Bangladesh Co Ltd (26163)' },
   { aliases: ['Kaixi Lingerie Bangladesh Co. Limited'], target: 'Kaixi Lingerie Bangladesh Co Ltd (27618)' },
-  { aliases: ['L\'ESQUIRE LIMITED', 'L,ESQUIRE LTD.'], target: 'Lesquire Limited (26569)' },
+  { aliases: ['L\'ESQUIRE LIMITED', 'L`ESQUIRE LIMITED', 'L,ESQUIRE LTD.'], target: 'Lesquire Limited (26569)' },
   { aliases: ['Libas Textiles Limited'], target: 'Libas Textiles Ltd (13809)' },
   { aliases: ['LIDA TEXTILE AND DYEING LTD', 'Lida Textiles'], target: 'Lida Textile & Dyeing Limited (22400)' },
   { aliases: ['Magic Works Ltd', 'Magic Works Ltd.'], target: 'Magic Works (26306)' },
