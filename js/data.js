@@ -147,6 +147,31 @@ const SUPPLIERS = {
       { name: "Welldone Apparels Ltd.", rate: FACTORY_SQM_RATE },
       { name: "Winter Dress", rate: FACTORY_SQM_RATE }
     ]
+  },
+  ps_union: {
+    name: "PS- UNION LABEL & ACCESSORIES LTD.",
+    formulaId: "union",
+    factories: [
+      { name: "WINTER DRESS LTD.", rate: FACTORY_SQM_RATE },
+      { name: "HASAN TANVIR FASHION WEAR LTD.", rate: FACTORY_SQM_RATE },
+      { name: "NORP KNIT IND.", rate: FACTORY_SQM_RATE },
+      { name: "SB STYLE COMPOSITE LTD.", rate: FACTORY_SQM_RATE },
+      { name: "MOUCHAK KNIT COMPOSITE LTD.", rate: FACTORY_SQM_RATE },
+      { name: "JIN HONG GARMENTS LTD.", rate: FACTORY_SQM_RATE },
+      { name: "SOUTHERN KNIT WEAR LTD.", rate: FACTORY_SQM_RATE },
+      { name: "GOLDEN REFIT LTD.", rate: FACTORY_SQM_RATE },
+      { name: "AXIS KNIT WAER LTD.", rate: FACTORY_SQM_RATE },
+      { name: "ECHOKNITS LTD.", rate: FACTORY_SQM_RATE },
+      { name: "TARGET DENIM & CASUAL WEAR LTD.", rate: FACTORY_SQM_RATE },
+      { name: "MODEL DE CAPITAL.", rate: FACTORY_SQM_RATE },
+      { name: "L,ESQUIRE LTD.", rate: FACTORY_SQM_RATE },
+      { name: "CHORKA TEXTILE LTD.", rate: FACTORY_SQM_RATE },
+      { name: "RIZVI FASHION LTD.", rate: FACTORY_SQM_RATE },
+      { name: "WELLDONE APPARELS LTD.", rate: FACTORY_SQM_RATE },
+      { name: "CROWN EXCLUSIVE LTD.", rate: FACTORY_SQM_RATE },
+      { name: "MG NICHE FLAIR LTD.", rate: FACTORY_SQM_RATE },
+      { name: "APS APPARELS LTD.", rate: FACTORY_SQM_RATE }
+    ]
   }
 };
 

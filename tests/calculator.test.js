@@ -15,6 +15,11 @@ QUnit.test('Supplier SQM logic', function(assert) {
   assert.equal(calcSupplierSQM('unknown', 10, 10, 10), 0);
 });
 
+QUnit.test('union formulaId uses the Epyllion/Union SQM formula', function(assert) {
+  // ((10+10+60)*(10+10+40)*2)/1M = (80*60*2)/1M = 0.0096
+  assert.equal(calcSupplierSQM('union', 10, 10, 10), 0.0096);
+});
+
 QUnit.test('calculatePrice full payload', function(assert) {
   // Mock partial response structure for integration points
   const res = calculatePrice('epyllion', 10, 10, 10, 1, FACTORY_SQM_RATE);

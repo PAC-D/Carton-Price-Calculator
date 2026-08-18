@@ -4,6 +4,7 @@ function calcPrimarkSQM(l, w, h) {
 
 function calcSupplierSQM(formulaId, l, w, h) {
   switch(formulaId) {
+    case 'union':
     case 'epyllion': return ((l + w + 60) * (w + h + 40) * 2) / 1000000;
     case 'mu': return ((l + 2 * w + 100) * (w + 2 * h + 100)) / 1000000;
     case 'uniglory': return ((l + 2 * w + 100) * (w + 2 * h + 50)) / 1000000;
