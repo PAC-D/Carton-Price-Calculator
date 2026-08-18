@@ -139,6 +139,7 @@ Aliases are the names as they appear in the system today (multiple aliases = the
 
 ## Verification
 
+0. **Backup:** before any rename, `primark-pricing-data-check/data.csv` is copied verbatim to `primark-pricing-data-check/data.backup-2026-08-19.csv` and committed (already done; the file is never touched by the rename).
 1. **Dry-run gate:** a script (temporary, outside the repo) loads the mapping, lists every old -> new change per file, and verifies every current name is accounted for (renamed or explicitly kept). The full table is reviewed before applying.
 2. **Post-apply check:** no current name remains in either file except the 10 kept names; each of the 10 kept names appears in the expected places.
 3. **QUnit (headless Edge, `tests/runner.html`):** 14 tests complete; the only failures are the 2 known pre-existing ones (CARTON_PRESETS window access; Primark SQM float precision); 181/184 assertions.
