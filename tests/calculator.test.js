@@ -74,6 +74,23 @@ QUnit.test('Uniglory keeps exact 50 mm roll width multiple', function(assert) {
   assert.equal(result.paperRollWidth, 500);
 });
 
+QUnit.test('PS-UNION uses the Epyllion/Union paper rule (divide 1, 50 mm rolls)', function(assert) {
+  const result = calculatePaperConsumption('ps_union', 100, 100, 100);
+  assert.deepEqual(result, {
+    boardLength: 400,
+    stitching: 100,
+    actualLength: 500,
+    flutingSpace: 10,
+    width: 210,
+    divide: 1,
+    cuttingSpace: 40,
+    boardWidth: 250,
+    rollIncrement: 50,
+    paperRollWidth: 250,
+    paperConsumptionSqm: 0.125
+  });
+});
+
 QUnit.test('invalid paper-consumption input returns null', function(assert) {
   assert.strictEqual(calculatePaperConsumption('unknown', 100, 100, 100), null);
   assert.strictEqual(calculatePaperConsumption('epyllion', 0, 100, 100), null);

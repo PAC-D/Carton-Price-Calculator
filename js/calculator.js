@@ -44,6 +44,7 @@ function calculatePaperConsumption(supplierKey, l, w, h) {
 
   const supplierRules = {
     epyllion: { divide: 1, rollIncrement: 50 },
+    ps_union: { divide: 1, rollIncrement: 50 },
     mu: { divide: 2, rollIncrement: 100 },
     uniglory: { divide: 1, rollIncrement: 50 }
   };
