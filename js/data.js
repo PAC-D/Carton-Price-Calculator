@@ -3,7 +3,7 @@ const FACTORY_SQM_RATE = PRIMARK_SQM_RATE * 0.95;
 
 const SUPPLIERS = {
   epyllion: {
-    name: "Epyllion",
+    name: "Epyllion Limited",
     formulaId: "epyllion",
     factories: [
       { name: "Fakir Knitwears Ltd PJT (14100)", rate: FACTORY_SQM_RATE },
@@ -39,7 +39,7 @@ const SUPPLIERS = {
     ]
   },
   mu: {
-    name: "M&U",
+    name: "M&U Packaging Ltd",
     formulaId: "mu",
     factories: [
       { name: "AKH Eco Apparels Ltd PJT (20979)", rate: FACTORY_SQM_RATE },
@@ -88,7 +88,7 @@ const SUPPLIERS = {
     ]
   },
   uniglory: {
-    name: "Uniglory",
+    name: "Uniglory Paper & Packaging",
     formulaId: "uniglory",
     factories: [
       { name: "AB Apparels Ltd (24718)", rate: FACTORY_SQM_RATE },
