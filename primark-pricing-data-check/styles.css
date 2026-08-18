@@ -214,14 +214,6 @@ body {
 .factory-table .price-col { text-align: right; white-space: nowrap; }
 .factory-table td.price-col { font-weight: 600; color: var(--primary); }
 
-.factory-table .benchmark-row td {
-  font-weight: 600;
-  color: var(--text-muted);
-  background: #f8fafc;
-  border-top: 2px solid var(--border);
-}
-.factory-table .benchmark-row td.price-col { color: var(--primary); }
-
 .export-area { margin-top: 1.5rem; display: flex; justify-content: flex-end; }
 
 .primary-btn {

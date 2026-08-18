@@ -2,7 +2,7 @@
 
 ## v2.4.2 (Supplier Full Names & Data-Check Polish)
 *   **Full Supplier Names**: Packaging suppliers now show their official full names on both pages — Epyllion Limited, M&U Packaging Ltd, Uniglory Paper & Packaging (UNION LABEL & ACCESSORIES LTD. unchanged).
-*   **Data-Check Polish**: The pricing data check page now shows a Primark SQM Price row (US$ 0.77), sorts factories alphabetically within packaging supplier groups, and exports PDFs with a dark blue title and generation date.
+*   **Data-Check Polish**: The pricing data check page now shows a Primark SQM Price column (US$ 0.77), sorts factories alphabetically within packaging supplier groups, and exports PDFs with a dark blue title and generation date.
 
 ## v2.4.1 (Official Factory Name Updates)
 *   **Official Factory Names**: Updated 129 factory names (133 entries) across the carton price calculator and pricing data check to their official directory names with factory IDs. 10 factories keep their previous names (no exact match in the directory or no mapping row).

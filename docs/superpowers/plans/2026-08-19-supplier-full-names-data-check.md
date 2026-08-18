@@ -1,3 +1,39 @@
+# Supplier Full Names + Data-Check Polish Implementation Plan
+
+> **POST-EXECUTION CORRECTION (2026-08-19):** After Tasks 1-6 were completed, reviewed, and shipped, the user clarified that the Primark SQM Price benchmark should be a **COLUMN**, not a row. Follow-up commit `fix: show primark sqm price as column instead of row` converted it: Tasks 4 and 5 as written below (tfoot row + bold last PDF row) were executed as planned and then replaced — `index.html` no longer has a tfoot, `app.js` has no `body.push`/`rowStyles`, and both table and PDF now carry a 5th column `Primark SQM Price (US $)` with `0.77` on every row. The spec reflects the corrected design.
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Show full packaging supplier names (Epyllion Limited, M&U Packaging Ltd, Uniglory Paper & Packaging) on both pages, and polish the pricing data check page: Primark SQM Price column, supplier-first alphabetical sorting, dark blue PDF title with generation date.
+
+**Architecture:** The calculator page's display names live in `js/data.js` `name:` fields plus hardcoded `index.html` labels — update those. The data-check page derives everything (table, filter, PDF) from `data.csv` column 1 — update the CSV (Approach A) and its test fixtures. Then add a pure `sortRows()` helper to the data-check `app.js` (unit-tested via node), wire it into render + PDF, add a Primark SQM Price column to the on-screen table and the PDF table, and restyle the PDF title/date. Changelog v2.4.2 last.
+
+**Tech Stack:** Vanilla JS + HTML + CSS, jsPDF 2.5.2 + autotable 3.8.4 (CDN), node:test for unit tests, QUnit in headless Edge for regression.
+
+## Global Constraints
+
+- Windows PowerShell only; repo root = `C:\Users\Shoaib\OneDrive - PacD\Projects\Primark\Primark Carton SQM Analysis\Carton-Price-Calculator`; work directly on branch `main` (user-approved).
+- `docs/` is gitignored -> use `git add -f` for anything under `docs/`.
+- SDD workspace for this feature: `.superpowers/sdd/2026-08-19-supplier-full-names-data-check/` (create it). Each task's report goes to `<workspace>\task-N-report.md`; each implementer replies with Status / Commit / Verification / Concerns / Report path.
+- `primark-pricing-data-check/data.backup-2026-08-19.csv` MUST NEVER be modified.
+- `PRIMARK_SQM_RATE = 0.77` in `js/data.js` — the new `PRIMARK_SQM_PRICE` constant in data-check `app.js` must equal `0.77` (comment notes the sync).
+- Supplier keys `epyllion` / `mu` / `uniglory` / `ps_union` NEVER change. `UNION LABEL & ACCESSORIES LTD.` name NEVER changes.
+- `data.csv`: header, row order, factory names, and prices NEVER change — only column 1 supplier values.
+- HTML on the calculator page: `&` must be `&amp;` (e.g. `M&amp;U Packaging Ltd`).
+- QUnit baseline: 14 tests, 181 assertions passed, EXACTLY the 2 pre-existing failures (CARTON_PRESETS window access; Primark SQM float). data-check `node --test`: 10/10 baseline, 11/11 after `sortRows` is added.
+- QUnit headless run command (Edge path, URL MUST be double-quoted — spaces in repo path):
+```powershell
+$msedge = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"; if (-not (Test-Path $msedge)) { $msedge = "C:\Program Files\Microsoft\Edge\Application\msedge.exe" }; $url = "file:///" + ((Get-Location).Path -replace '\\','/') + "/tests/runner.html"; $args = "--headless --disable-gpu --dump-dom `"$url`""; $p = Start-Process -FilePath $msedge -ArgumentList $args -RedirectStandardOutput "$env:TEMP\opencode\qunit-suppliers.txt" -PassThru -Wait; $c = Get-Content "$env:TEMP\opencode\qunit-suppliers.txt" -Raw; [regex]::Match($c, 'qunit-testresult-display[^>]*>([^<]+)').Groups[1].Value
+```
+Expected output: `14 tests completed in 11 milliseconds, with 2 failed, 0 skipped, and 0 todo.` (timing may vary).
+- Counts command (first-field split is safe — supplier column never contains commas or quotes):
+```powershell
+node -e "const fs=require('fs');const lines=fs.readFileSync('primark-pricing-data-check/data.csv','utf8').split(/\r?\n/).filter(l=>l&&!l.startsWith('Packaging'));const c={};lines.forEach(l=>{const s=l.slice(0,l.indexOf(','));c[s]=(c[s]||0)+1});console.log(JSON.stringify(c));console.log('total',lines.length)"
+```
+Expected after Task 2: `{"Epyllion Limited":30,"M&U Packaging Ltd":43,"Uniglory Paper & Packaging":55,"UNION LABEL & ACCESSORIES LTD.":19}` `total 147`.
+
+---
+
 ### Task 1: Calculator page full supplier names
 
 **Files:**

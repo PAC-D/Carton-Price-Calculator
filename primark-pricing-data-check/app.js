@@ -92,7 +92,6 @@ if (typeof document !== 'undefined') {
         els.title.textContent = 'Primark Pricing Data Check';
         populateFilters();
         render();
-        document.getElementById('benchmark-price').textContent = formatPrice(PRIMARK_SQM_PRICE);
         els.exportBtn.disabled = false;
       })
       .catch(err => {
@@ -116,11 +115,11 @@ if (typeof document !== 'undefined') {
       }));
       els.rowCount.textContent = `Showing ${filtered.length} of ${state.rows.length} rows`;
       if (filtered.length === 0) {
-        els.tbody.innerHTML = '<tr><td colspan="4">No rows match the current filters.</td></tr>';
+        els.tbody.innerHTML = '<tr><td colspan="5">No rows match the current filters.</td></tr>';
         return;
       }
       els.tbody.innerHTML = filtered.map((row, i) =>
-        `<tr><td class="col-sl">${i + 1}</td><td>${row.supplier}</td><td>${row.factory}</td><td class="col-price">${formatPrice(row.price)}</td></tr>`
+        `<tr><td class="col-sl">${i + 1}</td><td>${row.supplier}</td><td>${row.factory}</td><td class="price-col">${formatPrice(row.price)}</td><td class="price-col">${formatPrice(PRIMARK_SQM_PRICE)}</td></tr>`
       ).join('');
     }
 
@@ -150,8 +149,7 @@ if (typeof document !== 'undefined') {
       }
       const sorted = sortRows(filtered);
       const body = sorted.map((row, i) =>
-        [i + 1, row.supplier, row.factory, formatPrice(row.price)]);
-      body.push(['', 'Primark SQM Price', '', formatPrice(PRIMARK_SQM_PRICE)]);
+        [i + 1, row.supplier, row.factory, formatPrice(row.price), formatPrice(PRIMARK_SQM_PRICE)]);
 
       const doc = new window.jspdf.jsPDF();
       const logos = await loadLogos();
@@ -186,19 +184,14 @@ if (typeof document !== 'undefined') {
       doc.autoTable({
         startY: 40,
         margin: { top: 26 },
-        head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)']],
+        head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)', 'Primark SQM Price (US $)']],
         body: body,
         styles: { fontSize: 9, cellPadding: 2 },
         headStyles: { fillColor: [0, 32, 91] },
         columnStyles: {
           0: { cellWidth: 12 },
-          3: { halign: 'right', cellWidth: 30 }
-        },
-        rowStyles: function (row) {
-          if (row.index === body.length - 1) {
-            return { fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [0, 32, 91] };
-          }
-          return {};
+          3: { halign: 'right', cellWidth: 30 },
+          4: { halign: 'right', cellWidth: 30 }
         },
         willDrawPage: function (data) {
           if (data.pageNumber > 1) drawNavbar();
