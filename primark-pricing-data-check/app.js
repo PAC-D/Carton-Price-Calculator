@@ -1,3 +1,5 @@
+const PRIMARK_SQM_PRICE = 0.77; // keep in sync with PRIMARK_SQM_RATE in js/data.js
+
 function splitCSVLine(line) {
   const parts = [];
   let cur = '';
@@ -90,6 +92,7 @@ if (typeof document !== 'undefined') {
         els.title.textContent = 'Primark Pricing Data Check';
         populateFilters();
         render();
+        document.getElementById('benchmark-price').textContent = formatPrice(PRIMARK_SQM_PRICE);
         els.exportBtn.disabled = false;
       })
       .catch(err => {
