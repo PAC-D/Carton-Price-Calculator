@@ -21,7 +21,7 @@ A specialized web application designed for calculating corrugated carton prices,
 
 ## 🔗 Sub-pages
 
-*   **Pricing Data Check** (`primark-pricing-data-check/`): Standalone look-up of packaging rates (US $ per SQM) by factory and supplier, with alphabetical sorting, a Primark SQM Price benchmark column, and branded PDF export featuring both PACD and Primark logos. Rate data is maintained separately in `primark-pricing-data-check/data.csv`.
+*   **Pricing Data Check** (`primark-pricing-data-check/`): Standalone look-up of packaging rates (US $ per SQM) by factory and supplier, with alphabetical sorting, a **dynamically calculated Primark SQM Price column** (derived from each factory's rate using the 0.95 factory-to-Primark factor), and branded PDF export featuring both PACD and Primark logos. Rate data is maintained separately in `primark-pricing-data-check/data.csv`.
 
 ## 🏗️ Technical Architecture
 

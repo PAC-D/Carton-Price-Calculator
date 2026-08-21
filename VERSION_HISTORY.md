@@ -1,5 +1,9 @@
 # Version History
 
+## v2.5.0 (Dynamic Primark SQM Price Calculation)
+*   **Dynamic Primark SQM Price**: The Primark SQM Price column in the Pricing Data Check subpage is now calculated dynamically per factory using the 0.95 factory-to-Primark rate factor (Primark = Factory Price / 0.95), instead of a hardcoded $0.77 benchmark. This reflects the actual Primark-equivalent price based on each factory's specific supplier rate.
+*   **Removed Hardcoded Constant**: Eliminated `PRIMARK_SQM_PRICE = 0.77` from `primark-pricing-data-check/app.js`; calculation now derives from CSV factory prices and the shared 0.95 factor defined in `js/data.js`.
+
 ## v2.4.2 (Supplier Full Names & Data-Check Polish)
 *   **Full Supplier Names**: Packaging suppliers now show their official full names on both pages — Epyllion Limited, M&U Packaging Ltd, Uniglory Paper & Packaging (UNION LABEL & ACCESSORIES LTD. unchanged).
 *   **Data-Check Polish**: The pricing data check page now shows a Primark SQM Price column (US$ 0.77), sorts factories alphabetically within packaging supplier groups, and exports PDFs with a dark blue title and generation date.

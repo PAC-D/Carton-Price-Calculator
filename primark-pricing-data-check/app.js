@@ -1,4 +1,8 @@
-const PRIMARK_SQM_PRICE = 0.77; // keep in sync with PRIMARK_SQM_RATE in js/data.js
+const FACTORY_TO_PRIMARK_FACTOR = 0.95;
+
+function calculatePrimarkSQMPrice(factoryPrice) {
+  return factoryPrice / FACTORY_TO_PRIMARK_FACTOR;
+}
 
 function splitCSVLine(line) {
   const parts = [];
@@ -119,7 +123,7 @@ if (typeof document !== 'undefined') {
         return;
       }
       els.tbody.innerHTML = filtered.map((row, i) =>
-        `<tr><td class="col-sl">${i + 1}</td><td>${row.supplier}</td><td>${row.factory}</td><td class="price-col">${formatPrice(row.price)}</td><td class="price-col">${formatPrice(PRIMARK_SQM_PRICE)}</td></tr>`
+        `<tr><td class="col-sl">${i + 1}</td><td>${row.supplier}</td><td>${row.factory}</td><td class="price-col">${formatPrice(row.price)}</td><td class="price-col">${formatPrice(calculatePrimarkSQMPrice(row.price))}</td></tr>`
       ).join('');
     }
 
@@ -149,7 +153,7 @@ if (typeof document !== 'undefined') {
       }
       const sorted = sortRows(filtered);
       const body = sorted.map((row, i) =>
-        [i + 1, row.supplier, row.factory, formatPrice(row.price), formatPrice(PRIMARK_SQM_PRICE)]);
+        [i + 1, row.supplier, row.factory, formatPrice(row.price), formatPrice(calculatePrimarkSQMPrice(row.price))]);
 
       const doc = new window.jspdf.jsPDF();
       const logos = await loadLogos();
