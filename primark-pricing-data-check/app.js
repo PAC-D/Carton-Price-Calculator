@@ -1,7 +1,38 @@
-const FACTORY_TO_PRIMARK_FACTOR = 0.95;
+const PRIMARK_SQM_RATE = 0.77;
 
-function calculatePrimarkSQMPrice(factoryPrice) {
-  return factoryPrice / FACTORY_TO_PRIMARK_FACTOR;
+function calcPrimarkSQM(l, w, h) {
+  return ((2 * l + 2 * w + 50) * (w + h) / 1000000) * 1.08;
+}
+
+function calcEpyllionSQM(l, w, h) {
+  // NOTE: uses the calculator.js Epyllion formula; real Epyllion/Union LET() formula still pending
+  return ((l + w + 60) * (w + h + 40) * 2) / 1000000;
+}
+
+function calcMuSQM(l, w, h) {
+  const AL = (l + w) * 2 + 100;
+  const BW = w + h + 10;
+  const D = Math.floor((2300 - 40) / BW);
+  const val = BW * D + 40;
+  const rounded = Math.ceil(val / 100) * 100; // ROUNDUP(...,-2)
+  return (AL * rounded) / 1000000 / D;
+}
+
+function calcUniglorySQM(l, w, h) {
+  const AL = (l + w) * 2 + 100;
+  const BW = w + h + 10;
+  const D = Math.floor((1600 - 40) / BW);
+  const RW = BW * D + 40;
+  let rounded;
+  if (RW <= 1000) rounded = Math.ceil(RW / 100) * 100; // ROUNDUP(RW,-2)
+  else rounded = Math.ceil(RW / 50) * 50; // ROUNDUP(RW/50,0)*50
+  return (AL * rounded) / 1000000 / D;
+}
+
+function calcSupplierSQM(supplier, l, w, h) {
+  if (supplier === 'M&U Packaging Ltd') return calcMuSQM(l, w, h);
+  if (supplier === 'Uniglory Paper & Packaging') return calcUniglorySQM(l, w, h);
+  return calcEpyllionSQM(l, w, h); // Epyllion Limited & UNION LABEL use Epyllion formula
 }
 
 function splitCSVLine(line) {
@@ -61,26 +92,36 @@ function formatPrice(price) {
   return price.toFixed(2);
 }
 
+function formatArea(area) {
+  return area.toFixed(4);
+}
+
 function sortRows(rows) {
   return [...rows].sort((a, b) =>
     a.supplier.localeCompare(b.supplier) || a.factory.localeCompare(b.factory));
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { parseCSV, getSuppliers, getFactories, applyFilters, formatPrice, sortRows };
+  module.exports = {
+    parseCSV, getSuppliers, getFactories, applyFilters, formatPrice, sortRows,
+    calcPrimarkSQM, calcSupplierSQM, calcMuSQM, calcUniglorySQM, calcEpyllionSQM
+  };
 }
 
 if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', init);
 
   function init() {
-    const state = { rows: [] };
+    const state = { rows: [], dims: { l: 500, w: 300, h: 300 } };
     const els = {
       title: document.getElementById('page-title'),
       errorBox: document.getElementById('error-box'),
       supplierFilter: document.getElementById('supplier-filter'),
       factorySelect: document.getElementById('factory-select'),
       factorySearch: document.getElementById('factory-search'),
+      dimL: document.getElementById('dim-l'),
+      dimW: document.getElementById('dim-w'),
+      dimH: document.getElementById('dim-h'),
       rowCount: document.getElementById('row-count'),
       tbody: document.getElementById('price-tbody'),
       exportBtn: document.getElementById('export-pdf')
@@ -112,19 +153,44 @@ if (typeof document !== 'undefined') {
           .map(f => `<option value="${f}">${f}</option>`).join('');
     }
 
+    function readDims() {
+      const l = parseFloat(els.dimL.value);
+      const w = parseFloat(els.dimW.value);
+      const h = parseFloat(els.dimH.value);
+      if (l > 0 && w > 0 && h > 0) state.dims = { l, w, h };
+      return state.dims;
+    }
+
     function render() {
+      const { l, w, h } = readDims();
+      const primarkArea = calcPrimarkSQM(l, w, h);
+      const primarkCarton = primarkArea * PRIMARK_SQM_RATE;
       const filtered = sortRows(applyFilters(state.rows, {
         supplier: els.supplierFilter.value,
         factoryText: els.factorySearch.value
       }));
-      els.rowCount.textContent = `Showing ${filtered.length} of ${state.rows.length} rows`;
+      els.rowCount.innerHTML = `Carton <b>${l} &times; ${w} &times; ${h}</b> &nbsp;|&nbsp; ` +
+        `Primark SQM <b>${formatArea(primarkArea)}</b> &nbsp;|&nbsp; ` +
+        `Primark carton price <b>$${formatPrice(primarkCarton)}</b> &nbsp;|&nbsp; ` +
+        `Showing ${filtered.length} of ${state.rows.length} rows`;
       if (filtered.length === 0) {
-        els.tbody.innerHTML = '<tr><td colspan="5">No rows match the current filters.</td></tr>';
+        els.tbody.innerHTML = '<tr><td colspan="7">No rows match the current filters.</td></tr>';
         return;
       }
-      els.tbody.innerHTML = filtered.map((row, i) =>
-        `<tr><td class="col-sl">${i + 1}</td><td>${row.supplier}</td><td>${row.factory}</td><td class="price-col">${formatPrice(row.price)}</td><td class="price-col">${formatPrice(calculatePrimarkSQMPrice(row.price))}</td></tr>`
-      ).join('');
+      els.tbody.innerHTML = filtered.map((row, i) => {
+        const area = calcSupplierSQM(row.supplier, l, w, h);
+        const cartonPrice = area * row.price;
+        const primarkSqm = row.price * (area / primarkArea);
+        return `<tr>` +
+          `<td class="col-sl">${i + 1}</td>` +
+          `<td>${row.supplier}</td>` +
+          `<td>${row.factory}</td>` +
+          `<td class="price-col">${formatPrice(row.price)}</td>` +
+          `<td class="price-col">${formatArea(area)}</td>` +
+          `<td class="price-col">${formatPrice(cartonPrice)}</td>` +
+          `<td class="price-col">${formatPrice(primarkSqm)}</td>` +
+          `</tr>`;
+      }).join('');
     }
 
     els.supplierFilter.addEventListener('change', render);
@@ -136,6 +202,7 @@ if (typeof document !== 'undefined') {
       els.factorySelect.value = '';
       render();
     });
+    [els.dimL, els.dimW, els.dimH].forEach(el => el.addEventListener('input', render));
     els.exportBtn.addEventListener('click', exportPDF);
 
     async function exportPDF() {
@@ -143,6 +210,7 @@ if (typeof document !== 'undefined') {
         alert('PDF library failed to load. Check your internet connection.');
         return;
       }
+      const { l, w, h } = readDims();
       const filtered = applyFilters(state.rows, {
         supplier: els.supplierFilter.value,
         factoryText: els.factorySearch.value
@@ -152,8 +220,14 @@ if (typeof document !== 'undefined') {
         return;
       }
       const sorted = sortRows(filtered);
-      const body = sorted.map((row, i) =>
-        [i + 1, row.supplier, row.factory, formatPrice(row.price), formatPrice(calculatePrimarkSQMPrice(row.price))]);
+      const primarkArea = calcPrimarkSQM(l, w, h);
+      const body = sorted.map((row, i) => {
+        const area = calcSupplierSQM(row.supplier, l, w, h);
+        const cartonPrice = area * row.price;
+        const primarkSqm = row.price * (area / primarkArea);
+        return [i + 1, row.supplier, row.factory, formatPrice(row.price),
+          formatArea(area), formatPrice(cartonPrice), formatPrice(primarkSqm)];
+      });
 
       const doc = new window.jspdf.jsPDF();
       const logos = await loadLogos();
@@ -179,23 +253,27 @@ if (typeof document !== 'undefined') {
       doc.setFontSize(13);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(0, 32, 91);
-      doc.text('Carton Price for Factory', 14, 31);
+      doc.text('Primark Pricing Data Check', 14, 31);
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(100, 116, 139);
-      doc.text('Generated on ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), 14, 36);
+      doc.text(`Carton ${l} x ${w} x ${h}  |  Generated on ` +
+        new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), 14, 36);
 
       doc.autoTable({
         startY: 40,
         margin: { top: 26 },
-        head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)', 'Primark SQM Price (US $)']],
+        head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)',
+          'Supplier SQM', 'Carton Price (US $)', 'Primark SQM (US $)']],
         body: body,
-        styles: { fontSize: 9, cellPadding: 2 },
+        styles: { fontSize: 8, cellPadding: 2 },
         headStyles: { fillColor: [0, 32, 91] },
         columnStyles: {
-          0: { cellWidth: 12 },
-          3: { halign: 'right', cellWidth: 30 },
-          4: { halign: 'right', cellWidth: 30 }
+          0: { cellWidth: 10 },
+          3: { halign: 'right', cellWidth: 24 },
+          4: { halign: 'right', cellWidth: 22 },
+          5: { halign: 'right', cellWidth: 26 },
+          6: { halign: 'right', cellWidth: 26 }
         },
         willDrawPage: function (data) {
           if (data.pageNumber > 1) drawNavbar();
