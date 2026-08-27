@@ -109,16 +109,14 @@ if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', init);
 
   function init() {
-    const state = { rows: [], dims: { l: 500, w: 300, h: 300 } };
+    const REFERENCE_CARTON = { l: 500, w: 300, h: 300 };
+    const state = { rows: [] };
     const els = {
       title: document.getElementById('page-title'),
       errorBox: document.getElementById('error-box'),
       supplierFilter: document.getElementById('supplier-filter'),
       factorySelect: document.getElementById('factory-select'),
       factorySearch: document.getElementById('factory-search'),
-      dimL: document.getElementById('dim-l'),
-      dimW: document.getElementById('dim-w'),
-      dimH: document.getElementById('dim-h'),
       rowCount: document.getElementById('row-count'),
       tbody: document.getElementById('price-tbody'),
       exportBtn: document.getElementById('export-pdf')
@@ -150,16 +148,12 @@ if (typeof document !== 'undefined') {
           .map(f => '<option value="' + f + '">' + f + '</option>').join('');
     }
 
-    function readDims() {
-      const l = parseFloat(els.dimL.value);
-      const w = parseFloat(els.dimW.value);
-      const h = parseFloat(els.dimH.value);
-      if (l > 0 && w > 0 && h > 0) state.dims = { l, w, h };
-      return state.dims;
+    function getDims() {
+      return REFERENCE_CARTON;
     }
 
     function render() {
-      const { l, w, h } = readDims();
+      const { l, w, h } = getDims();
       const primarkArea = calcPrimarkSQM(l, w, h);
       const filtered = sortRows(applyFilters(state.rows, {
         supplier: els.supplierFilter.value,
@@ -167,7 +161,7 @@ if (typeof document !== 'undefined') {
       }));
       els.rowCount.textContent = 'Showing ' + filtered.length + ' of ' + state.rows.length + ' rows';
       if (filtered.length === 0) {
-        els.tbody.innerHTML = '<tr><td colspan="5">No rows match the current filters.</td></tr>';
+        els.tbody.innerHTML = '<tr><td colspan="6">No rows match the current filters.</td></tr>';
         return;
       }
       els.tbody.innerHTML = filtered.map(function(row, i) {
@@ -178,6 +172,7 @@ if (typeof document !== 'undefined') {
           '<td>' + row.supplier + '</td>' +
           '<td>' + row.factory + '</td>' +
           '<td class="price-col">' + formatPrice(row.price) + '</td>' +
+          '<td class="price-col">' + formatArea(supplierArea) + '</td>' +
           '<td class="price-col">' + formatPrice(primarkSqm) + '</td>' +
           '</tr>';
       }).join('');
@@ -192,7 +187,6 @@ if (typeof document !== 'undefined') {
       els.factorySelect.value = '';
       render();
     });
-    [els.dimL, els.dimW, els.dimH].forEach(function(el) { el.addEventListener('input', render); });
     els.exportBtn.addEventListener('click', exportPDF);
 
     async function exportPDF() {
@@ -215,7 +209,7 @@ if (typeof document !== 'undefined') {
         const supplierArea = calcSupplierSQM(row.supplier, l, w, h);
         const primarkSqm = row.price * (primarkArea / supplierArea);
         return [i + 1, row.supplier, row.factory, formatPrice(row.price),
-          formatPrice(primarkSqm)];
+          formatArea(supplierArea), formatPrice(primarkSqm)];
       });
 
       const doc = new window.jspdf.jsPDF();
@@ -252,15 +246,16 @@ if (typeof document !== 'undefined') {
       doc.autoTable({
         startY: 40,
         margin: { top: 26 },
-        head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)',
-          'Primark SQM (US $)']],
+        head: [['SL', 'Packaging Supplier', 'Factory', 'Factory SQM Price (US $)',
+          'Supplier SQM', 'Primark SQM Price (US $)']],
         body: body,
         styles: { fontSize: 8, cellPadding: 2 },
         headStyles: { fillColor: [0, 32, 91] },
         columnStyles: {
           0: { cellWidth: 10 },
           3: { halign: 'right', cellWidth: 24 },
-          4: { halign: 'right', cellWidth: 24 }
+          4: { halign: 'right', cellWidth: 20 },
+          5: { halign: 'right', cellWidth: 24 }
         },
         willDrawPage: function (data) {
           if (data.pageNumber > 1) drawNavbar();

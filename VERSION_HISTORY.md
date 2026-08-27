@@ -1,6 +1,11 @@
 # Version History
 
-## v2.6.1 (Primark-Cheaper P/E Conversion)
+## v2.6.2 (Fixed Carton, 6-Column P/E Table)
+*   **Removed Carton Dimension inputs**: The L/W/H input fields are gone; the reference carton is fixed in code at 500 × 300 × 300. Column header shows only `Showing X of Y rows` (no carton/SQM status bar).
+*   **6-column table**: `SL | Packaging Supplier | Factory | Factory SQM Price (US $) | Supplier SQM (area) | Primark SQM Price (US $)`. The Supplier SQM (area) column is the per-supplier differentiator (Epyllion/M&U/Uniglory each measure a different area for the same carton). Removed the Supplier Carton / Primark Carton columns.
+*   **P/E retained**: Primark SQM Price still uses `Primark $/sqm = Supplier $/sqm × (Primark area ÷ Supplier area)`, so Primark is consistently lower than the supplier.
+
+## v2.6.1 (Primark-Cheaper P/E Conversion) — *superseded by v2.6.2*
 *   **Primark-cheaper model**: Switched the Primark SQM conversion from same-cost (E/P) to Primark-cheaper (P/E): `Primark $/sqm = Supplier $/sqm × (Primark area ÷ Supplier area)`. Since Primark's SQM formula measures a smaller area, this makes both Primark $/sqm and Primark total carton price consistently lower than every supplier.
 *   **New Primark Carton Price column**: Added a per-row Primark Carton Price (= Primark $/sqm × Primark SQM area), shown alongside Supplier Carton for direct comparison (supplier always higher).
 *   **8-column layout**: Table and PDF now show 8 columns (added Primark Carton, renamed Carton Price → Supplier Carton).
