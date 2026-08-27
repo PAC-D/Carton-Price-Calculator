@@ -165,27 +165,20 @@ if (typeof document !== 'undefined') {
         supplier: els.supplierFilter.value,
         factoryText: els.factorySearch.value
       }));
-      els.rowCount.innerHTML = 'Carton <b>' + l + ' x ' + w + ' x ' + h + '</b> | ' +
-        'Primark SQM <b>' + formatArea(primarkArea) + '</b> | ' +
-        'Showing ' + filtered.length + ' of ' + state.rows.length + ' rows';
+      els.rowCount.textContent = 'Showing ' + filtered.length + ' of ' + state.rows.length + ' rows';
       if (filtered.length === 0) {
-        els.tbody.innerHTML = '<tr><td colspan="8">No rows match the current filters.</td></tr>';
+        els.tbody.innerHTML = '<tr><td colspan="5">No rows match the current filters.</td></tr>';
         return;
       }
       els.tbody.innerHTML = filtered.map(function(row, i) {
         const supplierArea = calcSupplierSQM(row.supplier, l, w, h);
-        const supplierCarton = supplierArea * row.price;
         const primarkSqm = row.price * (primarkArea / supplierArea);
-        const primarkCarton = primarkSqm * primarkArea;
         return '<tr>' +
           '<td class="col-sl">' + (i + 1) + '</td>' +
           '<td>' + row.supplier + '</td>' +
           '<td>' + row.factory + '</td>' +
           '<td class="price-col">' + formatPrice(row.price) + '</td>' +
-          '<td class="price-col">' + formatArea(supplierArea) + '</td>' +
-          '<td class="price-col">' + formatPrice(supplierCarton) + '</td>' +
           '<td class="price-col">' + formatPrice(primarkSqm) + '</td>' +
-          '<td class="price-col">' + formatPrice(primarkCarton) + '</td>' +
           '</tr>';
       }).join('');
     }
@@ -220,12 +213,9 @@ if (typeof document !== 'undefined') {
       const primarkArea = calcPrimarkSQM(l, w, h);
       const body = sorted.map(function(row, i) {
         const supplierArea = calcSupplierSQM(row.supplier, l, w, h);
-        const supplierCarton = supplierArea * row.price;
         const primarkSqm = row.price * (primarkArea / supplierArea);
-        const primarkCarton = primarkSqm * primarkArea;
         return [i + 1, row.supplier, row.factory, formatPrice(row.price),
-          formatArea(supplierArea), formatPrice(supplierCarton),
-          formatPrice(primarkSqm), formatPrice(primarkCarton)];
+          formatPrice(primarkSqm)];
       });
 
       const doc = new window.jspdf.jsPDF();
@@ -263,17 +253,14 @@ if (typeof document !== 'undefined') {
         startY: 40,
         margin: { top: 26 },
         head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)',
-          'Supplier SQM', 'Supplier Carton (US $)', 'Primark SQM (US $)', 'Primark Carton (US $)']],
+          'Primark SQM (US $)']],
         body: body,
         styles: { fontSize: 8, cellPadding: 2 },
         headStyles: { fillColor: [0, 32, 91] },
         columnStyles: {
           0: { cellWidth: 10 },
-          3: { halign: 'right', cellWidth: 20 },
-          4: { halign: 'right', cellWidth: 20 },
-          5: { halign: 'right', cellWidth: 24 },
-          6: { halign: 'right', cellWidth: 20 },
-          7: { halign: 'right', cellWidth: 22 }
+          3: { halign: 'right', cellWidth: 24 },
+          4: { halign: 'right', cellWidth: 24 }
         },
         willDrawPage: function (data) {
           if (data.pageNumber > 1) drawNavbar();
