@@ -1,13 +1,12 @@
 # Version History
 
-## v2.6.0 (Area-Aware Primark SQM Conversion)
-*   **Replaced flat 0.95 factor**: The Pricing Data Check subpage no longer uses the hardcoded factory-to-Primark 0.95 factor. Primark SQM is now derived area-aware: `Primark SQM = Supplier Price × (Supplier SQM area ÷ Primark SQM area)` for the selected carton, so each supplier's m² basis is respected.
-*   **Real Supplier SQM Formulas**: Implemented the actual paper-consumption SQM formulas — M&U (roll length 2300), Uniglory (roll length 1600), Primark, and Epyllion — matching the source Excel `LET()` calculations, replacing the previous simplified area approximations (which over-stated M&U/Uniglory areas and their conversion factors).
-*   **Carton Dimension Inputs**: Added L/W/H inputs (default 500 × 300 × 300) so SQM area, Carton Price (= Supplier SQM × Price SQM), and Primark SQM are computed for a specific reference carton.
-*   **New Columns**: Table and PDF now show Supplier SQM, Carton Price (US $), and Primark SQM (US $); the header bar displays the reference carton's Primark SQM and Primark carton price.
-*   **Generated Reports**: Added `primark-sqm-500x300x300.csv` and `carton-prices-500x300x300.csv` containing the full 147-row converted dataset.
+## v2.6.1 (Primark-Cheaper P/E Conversion)
+*   **Primark-cheaper model**: Switched the Primark SQM conversion from same-cost (E/P) to Primark-cheaper (P/E): `Primark $/sqm = Supplier $/sqm × (Primark area ÷ Supplier area)`. Since Primark's SQM formula measures a smaller area, this makes both Primark $/sqm and Primark total carton price consistently lower than every supplier.
+*   **New Primark Carton Price column**: Added a per-row Primark Carton Price (= Primark $/sqm × Primark SQM area), shown alongside Supplier Carton for direct comparison (supplier always higher).
+*   **8-column layout**: Table and PDF now show 8 columns (added Primark Carton, renamed Carton Price → Supplier Carton).
+*   **CSVs regenerated**: `primark-sqm-500x300x300.csv` and `carton-prices-500x300x300.csv` updated with P/E values.
 
-## v2.5.0 (Dynamic Primark SQM Price Calculation) — *superseded by v2.6.0*
+## v2.6.0 (Area-Aware Primark SQM Conversion) — *superseded by v2.6.1*
 *   **Dynamic Primark SQM Price**: The Primark SQM Price column in the Pricing Data Check subpage was calculated dynamically per factory using the 0.95 factory-to-Primark rate factor (Primark = Factory Price / 0.95). *Note: the 0.95 flat factor was replaced in v2.6.0 by area-aware conversion using the real supplier SQM formulas.*
 *   **Removed Hardcoded Constant**: Eliminated `PRIMARK_SQM_PRICE = 0.77` from `primark-pricing-data-check/app.js`; calculation now derives from CSV factory prices and the shared 0.95 factor defined in `js/data.js`.
 

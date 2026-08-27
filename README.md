@@ -21,7 +21,7 @@ A specialized web application designed for calculating corrugated carton prices,
 
 ## 🔗 Sub-pages
 
-*   **Pricing Data Check** (`primark-pricing-data-check/`): Standalone look-up of packaging rates (US $ per SQM) by factory and supplier, with alphabetical sorting, **carton dimension inputs** (L/W/H, default 500 × 300 × 300), and a **dynamically calculated Primark SQM column** derived area-aware — `Primark SQM = Supplier Price × (Supplier SQM area ÷ Primark SQM area)` — using the real paper-consumption SQM formulas (M&U roll 2300, Uniglory roll 1600, Primark, Epyllion). The table and branded PDF (both PACD + Primark logos) show Supplier SQM, Carton Price (SQM × Price), and Primark SQM. Pre-computed reports: `primark-sqm-500x300x300.csv` and `carton-prices-500x300x300.csv`. Rate data is maintained separately in `primark-pricing-data-check/data.csv`.
+*   **Pricing Data Check** (`primark-pricing-data-check/`): Standalone look-up of packaging rates (US $ per SQM) by factory and supplier, with alphabetical sorting, **carton dimension inputs** (L/W/H, default 500 × 300 × 300), and a **Primark SQM column derived via the P/E model** — `Primark $/sqm = Supplier $/sqm × (Primark area ÷ Supplier area)` — using the real paper-consumption SQM formulas (M&U roll 2300, Uniglory roll 1600, Primark, Epyllion). Primark is consistently cheaper since its SQM measures a smaller area. The table and branded PDF (both PACD + Primark logos) show 8 columns: Supplier SQM, Supplier Carton, Primark SQM, and Primark Carton. Pre-computed reports: `primark-sqm-500x300x300.csv` and `carton-prices-500x300x300.csv`. Rate data is maintained separately in `primark-pricing-data-check/data.csv`.
 
 ## 🏗️ Technical Architecture
 

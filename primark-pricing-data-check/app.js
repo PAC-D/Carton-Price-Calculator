@@ -1,11 +1,8 @@
-const PRIMARK_SQM_RATE = 0.77;
-
 function calcPrimarkSQM(l, w, h) {
   return ((2 * l + 2 * w + 50) * (w + h) / 1000000) * 1.08;
 }
 
 function calcEpyllionSQM(l, w, h) {
-  // NOTE: uses the calculator.js Epyllion formula; real Epyllion/Union LET() formula still pending
   return ((l + w + 60) * (w + h + 40) * 2) / 1000000;
 }
 
@@ -14,7 +11,7 @@ function calcMuSQM(l, w, h) {
   const BW = w + h + 10;
   const D = Math.floor((2300 - 40) / BW);
   const val = BW * D + 40;
-  const rounded = Math.ceil(val / 100) * 100; // ROUNDUP(...,-2)
+  const rounded = Math.ceil(val / 100) * 100;
   return (AL * rounded) / 1000000 / D;
 }
 
@@ -24,15 +21,15 @@ function calcUniglorySQM(l, w, h) {
   const D = Math.floor((1600 - 40) / BW);
   const RW = BW * D + 40;
   let rounded;
-  if (RW <= 1000) rounded = Math.ceil(RW / 100) * 100; // ROUNDUP(RW,-2)
-  else rounded = Math.ceil(RW / 50) * 50; // ROUNDUP(RW/50,0)*50
+  if (RW <= 1000) rounded = Math.ceil(RW / 100) * 100;
+  else rounded = Math.ceil(RW / 50) * 50;
   return (AL * rounded) / 1000000 / D;
 }
 
 function calcSupplierSQM(supplier, l, w, h) {
   if (supplier === 'M&U Packaging Ltd') return calcMuSQM(l, w, h);
   if (supplier === 'Uniglory Paper & Packaging') return calcUniglorySQM(l, w, h);
-  return calcEpyllionSQM(l, w, h); // Epyllion Limited & UNION LABEL use Epyllion formula
+  return calcEpyllionSQM(l, w, h);
 }
 
 function splitCSVLine(line) {
@@ -147,10 +144,10 @@ if (typeof document !== 'undefined') {
 
     function populateFilters() {
       els.supplierFilter.innerHTML = getSuppliers(state.rows)
-        .map(s => `<option value="${s}">${s}</option>`).join('');
+        .map(s => '<option value="' + s + '">' + s + '</option>').join('');
       els.factorySelect.innerHTML = '<option value="">All Factories</option>' +
         getFactories(state.rows)
-          .map(f => `<option value="${f}">${f}</option>`).join('');
+          .map(f => '<option value="' + f + '">' + f + '</option>').join('');
     }
 
     function readDims() {
@@ -164,32 +161,32 @@ if (typeof document !== 'undefined') {
     function render() {
       const { l, w, h } = readDims();
       const primarkArea = calcPrimarkSQM(l, w, h);
-      const primarkCarton = primarkArea * PRIMARK_SQM_RATE;
       const filtered = sortRows(applyFilters(state.rows, {
         supplier: els.supplierFilter.value,
         factoryText: els.factorySearch.value
       }));
-      els.rowCount.innerHTML = `Carton <b>${l} &times; ${w} &times; ${h}</b> &nbsp;|&nbsp; ` +
-        `Primark SQM <b>${formatArea(primarkArea)}</b> &nbsp;|&nbsp; ` +
-        `Primark carton price <b>$${formatPrice(primarkCarton)}</b> &nbsp;|&nbsp; ` +
-        `Showing ${filtered.length} of ${state.rows.length} rows`;
+      els.rowCount.innerHTML = 'Carton <b>' + l + ' x ' + w + ' x ' + h + '</b> | ' +
+        'Primark SQM <b>' + formatArea(primarkArea) + '</b> | ' +
+        'Showing ' + filtered.length + ' of ' + state.rows.length + ' rows';
       if (filtered.length === 0) {
-        els.tbody.innerHTML = '<tr><td colspan="7">No rows match the current filters.</td></tr>';
+        els.tbody.innerHTML = '<tr><td colspan="8">No rows match the current filters.</td></tr>';
         return;
       }
-      els.tbody.innerHTML = filtered.map((row, i) => {
-        const area = calcSupplierSQM(row.supplier, l, w, h);
-        const cartonPrice = area * row.price;
-        const primarkSqm = row.price * (area / primarkArea);
-        return `<tr>` +
-          `<td class="col-sl">${i + 1}</td>` +
-          `<td>${row.supplier}</td>` +
-          `<td>${row.factory}</td>` +
-          `<td class="price-col">${formatPrice(row.price)}</td>` +
-          `<td class="price-col">${formatArea(area)}</td>` +
-          `<td class="price-col">${formatPrice(cartonPrice)}</td>` +
-          `<td class="price-col">${formatPrice(primarkSqm)}</td>` +
-          `</tr>`;
+      els.tbody.innerHTML = filtered.map(function(row, i) {
+        const supplierArea = calcSupplierSQM(row.supplier, l, w, h);
+        const supplierCarton = supplierArea * row.price;
+        const primarkSqm = row.price * (primarkArea / supplierArea);
+        const primarkCarton = primarkSqm * primarkArea;
+        return '<tr>' +
+          '<td class="col-sl">' + (i + 1) + '</td>' +
+          '<td>' + row.supplier + '</td>' +
+          '<td>' + row.factory + '</td>' +
+          '<td class="price-col">' + formatPrice(row.price) + '</td>' +
+          '<td class="price-col">' + formatArea(supplierArea) + '</td>' +
+          '<td class="price-col">' + formatPrice(supplierCarton) + '</td>' +
+          '<td class="price-col">' + formatPrice(primarkSqm) + '</td>' +
+          '<td class="price-col">' + formatPrice(primarkCarton) + '</td>' +
+          '</tr>';
       }).join('');
     }
 
@@ -202,7 +199,7 @@ if (typeof document !== 'undefined') {
       els.factorySelect.value = '';
       render();
     });
-    [els.dimL, els.dimW, els.dimH].forEach(el => el.addEventListener('input', render));
+    [els.dimL, els.dimW, els.dimH].forEach(function(el) { el.addEventListener('input', render); });
     els.exportBtn.addEventListener('click', exportPDF);
 
     async function exportPDF() {
@@ -221,12 +218,14 @@ if (typeof document !== 'undefined') {
       }
       const sorted = sortRows(filtered);
       const primarkArea = calcPrimarkSQM(l, w, h);
-      const body = sorted.map((row, i) => {
-        const area = calcSupplierSQM(row.supplier, l, w, h);
-        const cartonPrice = area * row.price;
-        const primarkSqm = row.price * (area / primarkArea);
+      const body = sorted.map(function(row, i) {
+        const supplierArea = calcSupplierSQM(row.supplier, l, w, h);
+        const supplierCarton = supplierArea * row.price;
+        const primarkSqm = row.price * (primarkArea / supplierArea);
+        const primarkCarton = primarkSqm * primarkArea;
         return [i + 1, row.supplier, row.factory, formatPrice(row.price),
-          formatArea(area), formatPrice(cartonPrice), formatPrice(primarkSqm)];
+          formatArea(supplierArea), formatPrice(supplierCarton),
+          formatPrice(primarkSqm), formatPrice(primarkCarton)];
       });
 
       const doc = new window.jspdf.jsPDF();
@@ -257,23 +256,24 @@ if (typeof document !== 'undefined') {
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(100, 116, 139);
-      doc.text(`Carton ${l} x ${w} x ${h}  |  Generated on ` +
+      doc.text('Carton ' + l + ' x ' + w + ' x ' + h + '  |  Generated on ' +
         new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), 14, 36);
 
       doc.autoTable({
         startY: 40,
         margin: { top: 26 },
         head: [['SL', 'Packaging Supplier', 'Factory', 'Price SQM (US $)',
-          'Supplier SQM', 'Carton Price (US $)', 'Primark SQM (US $)']],
+          'Supplier SQM', 'Supplier Carton (US $)', 'Primark SQM (US $)', 'Primark Carton (US $)']],
         body: body,
         styles: { fontSize: 8, cellPadding: 2 },
         headStyles: { fillColor: [0, 32, 91] },
         columnStyles: {
           0: { cellWidth: 10 },
-          3: { halign: 'right', cellWidth: 24 },
-          4: { halign: 'right', cellWidth: 22 },
-          5: { halign: 'right', cellWidth: 26 },
-          6: { halign: 'right', cellWidth: 26 }
+          3: { halign: 'right', cellWidth: 20 },
+          4: { halign: 'right', cellWidth: 20 },
+          5: { halign: 'right', cellWidth: 24 },
+          6: { halign: 'right', cellWidth: 20 },
+          7: { halign: 'right', cellWidth: 22 }
         },
         willDrawPage: function (data) {
           if (data.pageNumber > 1) drawNavbar();
@@ -281,7 +281,7 @@ if (typeof document !== 'undefined') {
         didDrawPage: function (data) {
           doc.setFontSize(8);
           doc.setTextColor(100, 116, 139);
-          doc.text('PACD © 2026', 14, 290);
+          doc.text('PACD 2026', 14, 290);
           doc.setTextColor(0, 0, 0);
           doc.text('Page ' + data.pageNumber, 198, 290, { align: 'right' });
         }
